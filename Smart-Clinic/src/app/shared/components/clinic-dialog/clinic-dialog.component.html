@@ -1,0 +1,120 @@
+<div class="dialog-overlay" (click)="closeDialog()">
+  <div class="dialog-content" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h3>Create New Clinic</h3>
+      <button class="close-btn" (click)="closeDialog()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <form [formGroup]="clinicForm" (ngSubmit)="onSubmit()" class="clinic-form">
+      <div class="form-group">
+        <label for="name">Clinic Name *</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="form-control"
+          placeholder="Enter clinic name"
+        />
+        <div
+          class="error-message"
+          *ngIf="
+            clinicForm.get('name')?.invalid && clinicForm.get('name')?.touched
+          "
+        >
+          Clinic name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address *</label>
+        <textarea
+          id="address"
+          formControlName="address"
+          class="form-control"
+          placeholder="Enter clinic address"
+          rows="3"
+        ></textarea>
+        <div
+          class="error-message"
+          *ngIf="
+            clinicForm.get('address')?.invalid &&
+            clinicForm.get('address')?.touched
+          "
+        >
+          Address is required
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone *</label>
+          <input
+            type="tel"
+            id="phone"
+            formControlName="phone"
+            class="form-control"
+            placeholder="Enter phone number"
+          />
+          <div
+            class="error-message"
+            *ngIf="
+              clinicForm.get('phone')?.invalid &&
+              clinicForm.get('phone')?.touched
+            "
+          >
+            Valid phone number is required (11 digits)
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="form-control"
+            placeholder="Enter email address"
+          />
+          <div
+            class="error-message"
+            *ngIf="
+              clinicForm.get('email')?.invalid &&
+              clinicForm.get('email')?.touched
+            "
+          >
+            Valid email is required
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          class="form-control"
+          placeholder="Enter clinic description (optional)"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeDialog()">
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="clinicForm.invalid || isLoading"
+        >
+          <span *ngIf="isLoading">
+            <i class="fas fa-spinner fa-spin"></i> Creating...
+          </span>
+          <span *ngIf="!isLoading">Create Clinic</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

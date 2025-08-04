@@ -1,0 +1,86 @@
+.patient-dashboard {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  background: linear-gradient(
+    135deg,
+    var(--clinic-primary) 0%,
+    var(--clinic-secondary) 100%
+  );
+  color: white;
+  padding: 2rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.dashboard-header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.dashboard-header p {
+  margin: 0;
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.user-info-card,
+.dashboard-stats {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+}
+
+.user-info-card h3,
+.dashboard-stats h3 {
+  color: var(--clinic-primary);
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.user-info-card p {
+  margin-bottom: 0.5rem;
+  color: var(--clinic-text-primary);
+}
+
+.user-info-card strong {
+  color: var(--clinic-primary);
+}
+
+.dashboard-stats p {
+  color: var(--clinic-text-secondary);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .patient-dashboard {
+    padding: 1rem;
+  }
+
+  .dashboard-header {
+    padding: 1.5rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2rem;
+  }
+
+  .dashboard-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

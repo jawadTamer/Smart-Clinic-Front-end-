@@ -1,0 +1,54 @@
+<div class="register-container">
+  <div class="background-image" loading="lazy">
+    <img
+      src="assets/images/register-bg.jpg"
+      alt="Register Background"
+      loading="lazy"
+    />
+  </div>
+  <div class="container">
+    <div class="register-content">
+      <h1 class="register-title">Choose Your Registration Type</h1>
+      <p class="register-subtitle">
+        Select the type of account you want to create
+      </p>
+
+      <div class="registration-options">
+        <div class="option-card" routerLink="/auth/patient-register">
+          <div class="option-icon">
+            <i class="fas fa-user"></i>
+          </div>
+          <h3>Patient Registration</h3>
+          <p>
+            Create an account to book appointments and manage your health
+            records
+          </p>
+          <button class="btn btn-primary">Register as Patient</button>
+        </div>
+
+        <div class="option-card" routerLink="/auth/doctor-register">
+          <div class="option-icon">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <h3>Doctor Registration</h3>
+          <p>Join our medical team and start providing healthcare services</p>
+          <button class="btn btn-primary">Register as Doctor</button>
+        </div>
+      </div>
+
+      <!-- Login Link Section -->
+      <div class="login-section">
+        <div class="login-divider">
+          <span>or</span>
+        </div>
+        <div class="login-link">
+          <p>Already have an account?</p>
+          <a routerLink="/auth/login" class="btn btn-outline-light">
+            <i class="fas fa-sign-in-alt me-2"></i>
+            Sign In
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<div class="home-container">
+  <!-- Background Image Carousel -->
+  <div class="background-carousel">
+    <div
+      class="background-image"
+      [style.backgroundImage]="'url(' + getCurrentBackgroundImage() + ')'"
+      [@fadeInOut]="currentImageIndex"
+    ></div>
+    <div class="background-overlay"></div>
+  </div>
+
+  <!-- Hero Content -->
+  <div class="hero-content">
+    <div class="container">
+      <div class="hero-text">
+        <h1 class="hero-title">Better Healthcare for a Better Life</h1>
+        <p class="hero-subtitle">
+          Experience modern healthcare at your fingertips. Book appointments,
+          consult with experts, and manage your health journey with ease.
+        </p>
+        <div class="hero-actions">
+          <button
+            class="btn btn-outline-light btn-lg join-btn"
+            (click)="navigateToRegister()"
+          >
+            <i class="fas fa-user-plus me-2"></i>
+            Join Us
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Indicators -->
+  <div class="image-indicators">
+    <div
+      *ngFor="let image of backgroundImages; let i = index"
+      class="indicator"
+      [class.active]="i === currentImageIndex"
+      (click)="currentImageIndex = i"
+    ></div>
+  </div>
+</div>

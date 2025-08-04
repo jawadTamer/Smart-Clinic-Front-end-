@@ -1,0 +1,347 @@
+<div class="doctor-register-container">
+  <div class="background-image" loading="lazy">
+    <img
+      src="assets/images/register-bg.jpg"
+      alt="Register Background"
+      loading="lazy"
+    />
+  </div>
+  <div class="container">
+    <div class="register-card">
+      <div class="register-header">
+        <h1>Doctor Registration</h1>
+        <p>Join our medical team and start providing healthcare services</p>
+      </div>
+
+      <form
+        [formGroup]="doctorForm"
+        (ngSubmit)="onSubmit()"
+        class="doctor-form"
+      >
+        <!-- Personal Information Section -->
+        <div class="form-section">
+          <h3>Personal Information</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="first_name">First Name *</label>
+              <input
+                type="text"
+                id="first_name"
+                formControlName="first_name"
+                class="form-control"
+                placeholder="Enter first name"
+              />
+              <div class="error-message" *ngIf="getFieldError('first_name')">
+                {{ getFieldError("first_name") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="last_name">Last Name *</label>
+              <input
+                type="text"
+                id="last_name"
+                formControlName="last_name"
+                class="form-control"
+                placeholder="Enter last name"
+              />
+              <div class="error-message" *ngIf="getFieldError('last_name')">
+                {{ getFieldError("last_name") }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="username">Username *</label>
+              <input
+                type="text"
+                id="username"
+                formControlName="username"
+                class="form-control"
+                placeholder="Enter username"
+              />
+              <div class="error-message" *ngIf="getFieldError('username')">
+                {{ getFieldError("username") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-control"
+                placeholder="Enter email address"
+              />
+              <div class="error-message" *ngIf="getFieldError('email')">
+                {{ getFieldError("email") }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Phone *</label>
+              <input
+                type="tel"
+                id="phone"
+                formControlName="phone"
+                class="form-control"
+                placeholder="Enter phone number (11 digits)"
+              />
+              <div class="error-message" *ngIf="getFieldError('phone')">
+                {{ getFieldError("phone") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="date_of_birth">Date of Birth *</label>
+              <input
+                type="date"
+                id="date_of_birth"
+                formControlName="date_of_birth"
+                class="form-control"
+              />
+              <div class="error-message" *ngIf="getFieldError('date_of_birth')">
+                {{ getFieldError("date_of_birth") }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="gender">Gender *</label>
+              <select id="gender" formControlName="gender" class="form-control">
+                <option value="">Select gender</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+              <div class="error-message" *ngIf="getFieldError('gender')">
+                {{ getFieldError("gender") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="address">Address *</label>
+              <input
+                type="text"
+                id="address"
+                formControlName="address"
+                class="form-control"
+                placeholder="Enter address"
+              />
+              <div class="error-message" *ngIf="getFieldError('address')">
+                {{ getFieldError("address") }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profile_picture">Profile Picture</label>
+              <div class="file-upload-container">
+                <input
+                  type="file"
+                  id="profile_picture"
+                  (change)="onFileSelected($event)"
+                  class="file-input"
+                  accept="image/*"
+                />
+                <label for="profile_picture" class="file-label">
+                  <i class="fas fa-upload"></i>
+                  <span>{{ getSelectedFileName() }}</span>
+                </label>
+              </div>
+              <small class="form-text text-muted">
+                Accepted formats: JPG, PNG, GIF. Max size: 5MB
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Medical Information Section -->
+        <div class="form-section">
+          <h3>Medical Information</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="specialization">Specialization *</label>
+              <select
+                id="specialization"
+                formControlName="specialization"
+                class="form-control"
+              >
+                <option value="">Select specialization</option>
+                <option *ngFor="let spec of specializations" [value]="spec">
+                  {{ spec }}
+                </option>
+              </select>
+              <div
+                class="error-message"
+                *ngIf="getFieldError('specialization')"
+              >
+                {{ getFieldError("specialization") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="license_number">License Number *</label>
+              <input
+                type="text"
+                id="license_number"
+                formControlName="license_number"
+                class="form-control"
+                placeholder="Enter license number"
+              />
+              <div
+                class="error-message"
+                *ngIf="getFieldError('license_number')"
+              >
+                {{ getFieldError("license_number") }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="experience_years">Years of Experience </label>
+              <input
+                type="number"
+                id="experience_years"
+                formControlName="experience_years"
+                class="form-control"
+                placeholder="Enter years of experience"
+                min="0"
+              />
+              <div
+                class="error-message"
+                *ngIf="getFieldError('experience_years')"
+              >
+                {{ getFieldError("experience_years") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="consultation_fee">Consultation Fee </label>
+              <input
+                type="number"
+                id="consultation_fee"
+                formControlName="consultation_fee"
+                class="form-control"
+                placeholder="Enter consultation fee"
+                min="0"
+                step="0.01"
+              />
+              <div
+                class="error-message"
+                *ngIf="getFieldError('consultation_fee')"
+              >
+                {{ getFieldError("consultation_fee") }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="bio">Biography</label>
+            <textarea
+              id="bio"
+              formControlName="bio"
+              class="form-control"
+              placeholder="Tell us about your medical background and experience"
+              rows="4"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Clinic Selection Section -->
+        <div class="form-section">
+          <h3>Clinic Information</h3>
+
+          <div class="form-group">
+            <label for="clinic">Select Clinic *</label>
+            <div class="clinic-selection">
+              <select id="clinic" formControlName="clinic" class="form-control">
+                <option value="">Select a clinic</option>
+                <option *ngFor="let clinic of clinics" [value]="clinic.id">
+                  {{ clinic.name }} - {{ clinic.address }}
+                </option>
+              </select>
+              <button
+                type="button"
+                class="btn btn-outline-primary create-clinic-btn"
+                (click)="showCreateClinicDialog()"
+              >
+                <i class="fas fa-plus"></i>
+                Create New Clinic
+              </button>
+            </div>
+            <div class="error-message" *ngIf="getFieldError('clinic')">
+              {{ getFieldError("clinic") }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Password Section -->
+        <div class="form-section">
+          <h3>Account Security</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">Password *</label>
+              <input
+                type="password"
+                id="password"
+                formControlName="password"
+                class="form-control"
+                placeholder="Enter password (min 8 characters)"
+              />
+              <div class="error-message" *ngIf="getFieldError('password')">
+                {{ getFieldError("password") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password2">Confirm Password *</label>
+              <input
+                type="password"
+                id="password2"
+                formControlName="password2"
+                class="form-control"
+                placeholder="Confirm password"
+              />
+              <div class="error-message" *ngIf="getFieldError('password2')">
+                {{ getFieldError("password2") }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="btn btn-primary submit-btn"
+            [disabled]="doctorForm.invalid || isLoading"
+          >
+            <span *ngIf="isLoading">
+              <i class="fas fa-spinner fa-spin"></i> Registering...
+            </span>
+            <span *ngIf="!isLoading">
+              <i class="fas fa-user-md"></i> Register as Doctor
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Clinic Creation Dialog -->
+  <app-clinic-dialog
+    *ngIf="showClinicDialog"
+    (clinicCreated)="onClinicCreated($event)"
+    (dialogClosed)="onDialogClosed()"
+  ></app-clinic-dialog>
+</div>

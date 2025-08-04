@@ -1,0 +1,74 @@
+<div class="login-container">
+  <div class="background-image" loading="lazy">
+    <img
+      src="assets/images/register-bg.jpg"
+      alt="Login Background"
+      loading="lazy"
+    />
+  </div>
+  <div class="container">
+    <div class="login-card">
+      <div class="login-header">
+        <h1>Welcome Back</h1>
+        <p>Sign in to your Smart Clinic account</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            formControlName="username"
+            class="form-control"
+            [class.invalid]="getFieldError('username')"
+            placeholder="Enter your username"
+          />
+          <div class="error-message" *ngIf="getFieldError('username')">
+            {{ getFieldError("username") }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            class="form-control"
+            [class.invalid]="getFieldError('password')"
+            placeholder="Enter your password"
+          />
+          <div class="error-message" *ngIf="getFieldError('password')">
+            {{ getFieldError("password") }}
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="login-btn"
+            [disabled]="loginForm.invalid || isLoading"
+          >
+            <span *ngIf="isLoading">
+              <i class="fas fa-spinner fa-spin me-2"></i>
+              Signing In...
+            </span>
+            <span *ngIf="!isLoading">
+              <i class="fas fa-sign-in-alt me-2"></i>
+              Sign In
+            </span>
+          </button>
+        </div>
+
+        <div class="register-link">
+          <p>Don't have an account?</p>
+          <a routerLink="/auth/register" class="btn btn-outline-primary">
+            <i class="fas fa-user-plus me-2"></i>
+            Create Account
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

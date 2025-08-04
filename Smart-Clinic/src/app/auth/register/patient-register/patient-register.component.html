@@ -1,0 +1,306 @@
+<div class="patient-register-container">
+  <div class="background-image" loading="lazy">
+    <img
+      src="assets/images/register-bg.jpg"
+      alt="Register Background"
+      loading="lazy"
+    />
+  </div>
+  <div class="container">
+    <div class="register-card">
+      <div class="register-header">
+        <h1>Patient Registration</h1>
+        <p>Join our healthcare platform and start managing your health</p>
+      </div>
+
+      <form
+        [formGroup]="patientForm"
+        (ngSubmit)="onSubmit()"
+        class="patient-form"
+      >
+        <!-- Personal Information Section -->
+        <div class="form-section">
+          <h3>Personal Information</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="first_name">First Name *</label>
+              <input
+                type="text"
+                id="first_name"
+                formControlName="first_name"
+                class="form-control"
+                placeholder="Enter first name"
+              />
+              <div class="error-message" *ngIf="getFieldError('first_name')">
+                {{ getFieldError("first_name") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="last_name">Last Name *</label>
+              <input
+                type="text"
+                id="last_name"
+                formControlName="last_name"
+                class="form-control"
+                placeholder="Enter last name"
+              />
+              <div class="error-message" *ngIf="getFieldError('last_name')">
+                {{ getFieldError("last_name") }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="username">Username *</label>
+              <input
+                type="text"
+                id="username"
+                formControlName="username"
+                class="form-control"
+                placeholder="Enter username"
+              />
+              <div class="error-message" *ngIf="getFieldError('username')">
+                {{ getFieldError("username") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-control"
+                placeholder="Enter email address"
+              />
+              <div class="error-message" *ngIf="getFieldError('email')">
+                {{ getFieldError("email") }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Phone *</label>
+              <input
+                type="tel"
+                id="phone"
+                formControlName="phone"
+                class="form-control"
+                placeholder="Enter phone number (11 digits)"
+              />
+              <div class="error-message" *ngIf="getFieldError('phone')">
+                {{ getFieldError("phone") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="date_of_birth">Date of Birth *</label>
+              <input
+                type="date"
+                id="date_of_birth"
+                formControlName="date_of_birth"
+                class="form-control"
+              />
+              <div class="error-message" *ngIf="getFieldError('date_of_birth')">
+                {{ getFieldError("date_of_birth") }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="gender">Gender *</label>
+              <select id="gender" formControlName="gender" class="form-control">
+                <option value="">Select gender</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+              <div class="error-message" *ngIf="getFieldError('gender')">
+                {{ getFieldError("gender") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="blood_type">Blood Type *</label>
+              <select
+                id="blood_type"
+                formControlName="blood_type"
+                class="form-control"
+              >
+                <option value="">Select blood type</option>
+                <option
+                  *ngFor="let bloodType of bloodTypes"
+                  [value]="bloodType"
+                >
+                  {{ bloodType }}
+                </option>
+              </select>
+              <div class="error-message" *ngIf="getFieldError('blood_type')">
+                {{ getFieldError("blood_type") }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address">Address *</label>
+            <input
+              type="text"
+              id="address"
+              formControlName="address"
+              class="form-control"
+              placeholder="Enter address"
+            />
+            <div class="error-message" *ngIf="getFieldError('address')">
+              {{ getFieldError("address") }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="profile_picture">Profile Picture</label>
+            <div class="file-upload-container">
+              <input
+                type="file"
+                id="profile_picture"
+                (change)="onFileSelected($event)"
+                class="file-input"
+                accept="image/*"
+              />
+              <label for="profile_picture" class="file-label">
+                <i class="fas fa-upload"></i>
+                <span>{{ getSelectedFileName() }}</span>
+              </label>
+            </div>
+            <small class="form-text text-muted">
+              Accepted formats: JPG, PNG, GIF. Max size: 5MB
+            </small>
+          </div>
+        </div>
+
+        <!-- Medical Information Section -->
+        <div class="form-section">
+          <h3>Medical Information</h3>
+
+          <div class="form-group">
+            <label for="medical_history">Medical History</label>
+            <textarea
+              id="medical_history"
+              formControlName="medical_history"
+              class="form-control"
+              placeholder="Please describe your medical history, previous surgeries, chronic conditions, etc."
+              rows="4"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="allergies">Allergies</label>
+            <textarea
+              id="allergies"
+              formControlName="allergies"
+              class="form-control"
+              placeholder="Please list any allergies (medications, food, environmental, etc.)"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Emergency Contact Section -->
+        <div class="form-section">
+          <h3>Emergency Contact</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="emergency_contact_name"
+                >Emergency Contact Name *</label
+              >
+              <input
+                type="text"
+                id="emergency_contact_name"
+                formControlName="emergency_contact_name"
+                class="form-control"
+                placeholder="Enter emergency contact name"
+              />
+              <div
+                class="error-message"
+                *ngIf="getFieldError('emergency_contact_name')"
+              >
+                {{ getFieldError("emergency_contact_name") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="emergency_contact">Emergency Contact Phone *</label>
+              <input
+                type="tel"
+                id="emergency_contact"
+                formControlName="emergency_contact"
+                class="form-control"
+                placeholder="Enter emergency contact phone (11 digits)"
+              />
+              <div
+                class="error-message"
+                *ngIf="getFieldError('emergency_contact')"
+              >
+                {{ getFieldError("emergency_contact") }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Password Section -->
+        <div class="form-section">
+          <h3>Account Security</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">Password *</label>
+              <input
+                type="password"
+                id="password"
+                formControlName="password"
+                class="form-control"
+                placeholder="Enter password (min 8 characters)"
+              />
+              <div class="error-message" *ngIf="getFieldError('password')">
+                {{ getFieldError("password") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password2">Confirm Password *</label>
+              <input
+                type="password"
+                id="password2"
+                formControlName="password2"
+                class="form-control"
+                placeholder="Confirm password"
+              />
+              <div class="error-message" *ngIf="getFieldError('password2')">
+                {{ getFieldError("password2") }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="btn btn-primary submit-btn"
+            [disabled]="patientForm.invalid || isLoading"
+          >
+            <span *ngIf="isLoading">
+              <i class="fas fa-spinner fa-spin"></i> Registering...
+            </span>
+            <span *ngIf="!isLoading">
+              <i class="fas fa-user"></i> Register as Patient
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

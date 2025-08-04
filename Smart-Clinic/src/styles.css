@@ -1,0 +1,191 @@
+/* You can add global styles to this file, and also import other style files */
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap");
+
+/* Smart Clinic Color Palette */
+:root {
+  /* Primary Colors */
+  --clinic-primary: #2563eb;
+  --clinic-primary-light: #3b82f6;
+  --clinic-primary-dark: #1d4ed8;
+  --clinic-primary-50: #eff6ff;
+  --clinic-primary-100: #dbeafe;
+  --clinic-primary-200: #bfdbfe;
+  --clinic-primary-300: #93c5fd;
+  --clinic-primary-400: #60a5fa;
+  --clinic-primary-500: #3b82f6;
+  --clinic-primary-600: #2563eb;
+  --clinic-primary-700: #1d4ed8;
+  --clinic-primary-800: #1e40af;
+  --clinic-primary-900: #1e3a8a;
+
+  /* Secondary Colors */
+  --clinic-secondary: #10b981;
+  --clinic-secondary-light: #34d399;
+  --clinic-secondary-dark: #059669;
+  --clinic-secondary-50: #ecfdf5;
+  --clinic-secondary-100: #d1fae5;
+  --clinic-secondary-200: #a7f3d0;
+  --clinic-secondary-300: #6ee7b7;
+  --clinic-secondary-400: #34d399;
+  --clinic-secondary-500: #10b981;
+  --clinic-secondary-600: #059669;
+  --clinic-secondary-700: #047857;
+  --clinic-secondary-800: #065f46;
+  --clinic-secondary-900: #064e3b;
+
+  /* Accent Colors */
+  --clinic-accent: #f59e0b;
+  --clinic-accent-light: #fbbf24;
+  --clinic-accent-dark: #d97706;
+  --clinic-accent-50: #fffbeb;
+  --clinic-accent-100: #fef3c7;
+  --clinic-accent-200: #fde68a;
+  --clinic-accent-300: #fcd34d;
+  --clinic-accent-400: #fbbf24;
+  --clinic-accent-500: #f59e0b;
+  --clinic-accent-600: #d97706;
+  --clinic-accent-700: #b45309;
+  --clinic-accent-800: #92400e;
+  --clinic-accent-900: #78350f;
+
+  /* Neutral Colors */
+  --clinic-gray-50: #f9fafb;
+  --clinic-gray-100: #f3f4f6;
+  --clinic-gray-200: #e5e7eb;
+  --clinic-gray-300: #d1d5db;
+  --clinic-gray-400: #9ca3af;
+  --clinic-gray-500: #6b7280;
+  --clinic-gray-600: #4b5563;
+  --clinic-gray-700: #374151;
+  --clinic-gray-800: #1f2937;
+  --clinic-gray-900: #111827;
+
+  /* Status Colors */
+  --clinic-success: #10b981;
+  --clinic-warning: #f59e0b;
+  --clinic-error: #ef4444;
+  --clinic-info: #3b82f6;
+
+  /* Background Colors */
+  --clinic-bg-primary: #ffffff;
+  --clinic-bg-secondary: #f9fafb;
+  --clinic-bg-tertiary: #f3f4f6;
+  --clinic-bg-dark: #1f2937;
+
+  /* Text Colors */
+  --clinic-text-primary: #111827;
+  --clinic-text-secondary: #4b5563;
+  --clinic-text-tertiary: #6b7280;
+  --clinic-text-light: #9ca3af;
+  --clinic-text-white: #ffffff;
+
+  /* Border Colors */
+  --clinic-border-light: #e5e7eb;
+  --clinic-border-medium: #d1d5db;
+  --clinic-border-dark: #9ca3af;
+
+  /* Shadow Colors */
+  --clinic-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --clinic-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --clinic-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --clinic-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: "Inter", "Poppins", Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--clinic-text-primary);
+  background-color: var(--clinic-bg-primary);
+}
+
+/* Clinic-specific typography */
+.clinic-title {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color: var(--clinic-text-primary);
+}
+
+.clinic-heading {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  color: var(--clinic-text-secondary);
+}
+
+.clinic-text {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  color: var(--clinic-text-tertiary);
+}
+
+.clinic-accent {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color: var(--clinic-primary);
+}
+
+/* Utility Classes for Colors */
+.bg-primary {
+  background-color: var(--clinic-primary);
+}
+.bg-secondary {
+  background-color: var(--clinic-secondary);
+}
+.bg-accent {
+  background-color: var(--clinic-accent);
+}
+.bg-success {
+  background-color: var(--clinic-success);
+}
+.bg-warning {
+  background-color: var(--clinic-warning);
+}
+.bg-error {
+  background-color: var(--clinic-error);
+}
+.bg-info {
+  background-color: var(--clinic-info);
+}
+
+.text-primary {
+  color: var(--clinic-primary);
+}
+.text-secondary {
+  color: var(--clinic-secondary);
+}
+.text-accent {
+  color: var(--clinic-accent);
+}
+.text-success {
+  color: var(--clinic-success);
+}
+.text-warning {
+  color: var(--clinic-warning);
+}
+.text-error {
+  color: var(--clinic-error);
+}
+.text-info {
+  color: var(--clinic-info);
+}
+
+.border-primary {
+  border-color: var(--clinic-primary);
+}
+.border-secondary {
+  border-color: var(--clinic-secondary);
+}
+.border-accent {
+  border-color: var(--clinic-accent);
+}

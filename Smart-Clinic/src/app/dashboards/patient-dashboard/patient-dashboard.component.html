@@ -1,0 +1,20 @@
+<div class="patient-dashboard">
+  <div class="dashboard-header">
+    <h1>Patient Dashboard</h1>
+    <p>Welcome, {{ currentUser?.first_name }} {{ currentUser?.last_name }}!</p>
+  </div>
+
+  <div class="dashboard-content">
+    <div class="user-info-card">
+      <h3>Your Information</h3>
+      <p><strong>Username:</strong> {{ currentUser?.username }}</p>
+      <p><strong>Email:</strong> {{ currentUser?.email }}</p>
+      <p><strong>User Type:</strong> {{ currentUser?.user_type }}</p>
+    </div>
+
+    <div class="dashboard-stats">
+      <h3>Dashboard Features Coming Soon</h3>
+      <p>This is the patient dashboard. More features will be added here.</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,179 @@
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <!-- Left side - Animation and Brand -->
+    <div class="navbar-brand-section">
+      <div class="brand-animation">
+        <app-lottie-player
+          animationPath="assets/animations/Animation.json"
+          [autoplay]="true"
+          [loop]="true"
+          [speed]="1"
+          width="50px"
+          height="50px"
+        >
+        </app-lottie-player>
+      </div>
+      <span class="brand-text">Smart Clinic</span>
+    </div>
+
+    <!-- Mobile Toggle Button -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navigation and Auth Buttons -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Authenticated User Section - Desktop -->
+      <div
+        class="auth-buttons d-none d-lg-flex ms-auto"
+        *ngIf="isAuthenticated"
+      >
+        <div class="user-profile-dropdown">
+          <div class="user-profile-trigger" (click)="toggleUserDropdown()">
+            <div class="user-avatar">
+              <img
+                *ngIf="getProfilePictureUrl() && !imageLoadError"
+                [src]="getProfilePictureUrl()"
+                [alt]="currentUser?.first_name"
+                class="profile-pic"
+                (error)="onImageError($event)"
+                (load)="onImageLoad($event)"
+              />
+              <div
+                *ngIf="!getProfilePictureUrl() || imageLoadError"
+                class="profile-placeholder"
+              >
+                {{ currentUser?.first_name?.charAt(0)?.toUpperCase() }}
+              </div>
+            </div>
+            <div class="user-info">
+              <span class="user-name"
+                >{{ currentUser?.first_name }}
+                {{ currentUser?.last_name }}</span
+              >
+              <span class="user-type">{{ currentUser?.user_type }}</span>
+            </div>
+            <i class="fas fa-chevron-down dropdown-arrow"></i>
+          </div>
+
+          <div class="user-dropdown-menu" [class.show]="isUserDropdownOpen">
+            <div class="dropdown-item" (click)="navigateToHome()">
+              <i class="fas fa-home"></i>
+              <span>Home</span>
+            </div>
+            <div class="dropdown-item" (click)="navigateToDashboard()">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" (click)="logout()">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Sign Out</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Non-Authenticated User Section - Desktop -->
+      <div
+        class="auth-buttons d-none d-lg-flex ms-auto"
+        *ngIf="!isAuthenticated"
+      >
+        <button
+          class="btn btn-outline-primary me-2"
+          type="button"
+          (click)="navigateToLogin()"
+        >
+          Login
+        </button>
+        <button
+          class="btn btn-primary"
+          type="button"
+          (click)="navigateToRegister()"
+        >
+          Register
+        </button>
+      </div>
+
+      <!-- Authenticated User Section - Mobile -->
+      <div class="auth-buttons-mobile d-lg-none" *ngIf="isAuthenticated">
+        <div class="user-profile-dropdown-mobile">
+          <div
+            class="user-profile-trigger-mobile"
+            (click)="toggleUserDropdown()"
+          >
+            <div class="user-avatar-mobile">
+              <img
+                *ngIf="getProfilePictureUrl() && !imageLoadError"
+                [src]="getProfilePictureUrl()"
+                [alt]="currentUser?.first_name"
+                class="profile-pic-mobile"
+                (error)="onImageError($event)"
+                (load)="onImageLoad($event)"
+              />
+              <div
+                *ngIf="!getProfilePictureUrl() || imageLoadError"
+                class="profile-placeholder-mobile"
+              >
+                {{ currentUser?.first_name?.charAt(0)?.toUpperCase() }}
+              </div>
+            </div>
+            <div class="user-info-mobile">
+              <span class="user-name"
+                >{{ currentUser?.first_name }}
+                {{ currentUser?.last_name }}</span
+              >
+              <span class="user-type">{{ currentUser?.user_type }}</span>
+            </div>
+            <i class="fas fa-chevron-down dropdown-arrow-mobile"></i>
+          </div>
+
+          <div
+            class="user-dropdown-menu-mobile"
+            [class.show]="isUserDropdownOpen"
+          >
+            <div class="dropdown-item" (click)="navigateToHome()">
+              <i class="fas fa-home"></i>
+              <span>Home</span>
+            </div>
+            <div class="dropdown-item" (click)="navigateToDashboard()">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" (click)="logout()">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Sign Out</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Non-Authenticated User Section - Mobile -->
+      <div class="auth-buttons-mobile d-lg-none" *ngIf="!isAuthenticated">
+        <button
+          class="btn btn-outline-primary w-100 mb-2"
+          type="button"
+          (click)="navigateToLogin()"
+        >
+          Login
+        </button>
+        <button
+          class="btn btn-primary w-100"
+          type="button"
+          (click)="navigateToRegister()"
+        >
+          Register
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
