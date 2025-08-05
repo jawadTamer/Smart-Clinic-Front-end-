@@ -108,6 +108,32 @@ body {
   line-height: 1.6;
   color: var(--clinic-text-primary);
   background-color: var(--clinic-bg-primary);
+  padding-top: 70px; 
+}
+
+/* Responsive padding for fixed header */
+@media (min-width: 576px) {
+  body {
+    padding-top: 75px; 
+  }
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-top: 90px;
+  }
+}
+
+@media (min-width: 992px) {
+  body {
+    padding-top: 85px;
+  }
+}
+
+@media (min-width: 1200px) {
+  body {
+    padding-top: 90px; /* Extra large screens */
+  }
 }
 
 /* Clinic-specific typography */

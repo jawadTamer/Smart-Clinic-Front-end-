@@ -1,2 +1,103 @@
-<h2>Doctor Profile</h2>
-<p>Profile details go here.</p>
+<div class="profile-container">
+  <div class="profile-header">
+    <h1>Doctor Profile</h1>
+    <p class="subtitle">Your professional information and details</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading your profile...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <div class="error-message">
+      <i class="error-icon">⚠️</i>
+      <p>{{ error }}</p>
+      <button class="retry-btn" (click)="retryLoadProfile()">Try Again</button>
+    </div>
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="doctorProfile && !loading && !error" class="profile-content">
+    <div class="profile-card">
+      <div class="profile-header-section">
+        <div class="profile-image-container">
+          <img 
+          *ngIf="getProfilePictureUrl() && !imageLoadError"
+          [src]="getProfilePictureUrl()"
+          [alt]="currentUser?.first_name"
+          class="profile-pic"
+          (error)="onImageError($event)"
+          (load)="onImageLoad($event)"
+          />
+        </div>
+        <div class="profile-info">
+          <h2 class="doctor-name">{{ doctorProfile.name }}</h2>
+          <p class="specialization">{{ doctorProfile.specialization }}</p>
+          <div class="experience-badge">
+            <span class="experience-years">{{ doctorProfile.experience_years }} years experience</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-details">
+        <div class="detail-grid">
+          <div class="detail-item">
+            <div class="detail-icon">📧</div>
+            <div class="detail-content">
+              <label>Email Address</label>
+              <span>{{ doctorProfile.email }}</span>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-icon">📱</div>
+            <div class="detail-content">
+              <label>Phone Number</label>
+              <span>{{ doctorProfile.phone }}</span>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-icon">🏥</div>
+            <div class="detail-content">
+              <label>Clinic Name</label>
+              <span>{{ doctorProfile.clinicname }}</span>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-icon">🩺</div>
+            <div class="detail-content">
+              <label>Medical Specialization</label>
+              <span>{{ doctorProfile.specialization }}</span>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-icon">💼</div>
+            <div class="detail-content">
+              <label>Years of Experience</label>
+              <span>{{ doctorProfile.experience_years }} years</span>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-icon">👤</div>
+            <div class="detail-content">
+              <label>Username</label>
+              <span>{{ doctorProfile.username }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bio-section" *ngIf="doctorProfile.bio">
+          <h3>Professional Biography</h3>
+          <p class="bio-text">{{ doctorProfile.bio }}</p>
+        </div>
+      </div>
+    </div>
+
+  

@@ -42,10 +42,9 @@ export class LoginComponent {
 
           localStorage.setItem('user', JSON.stringify(response.user));
 
-          const token =
-            response.token || response.access || response.refresh || '';
+          const token = response.tokens.access;
 
-          const finalToken = token || `user_${response.user.id}_${Date.now()}`;
+          const finalToken = token;
 
           localStorage.setItem('token', finalToken);
           localStorage.setItem('userType', response.user.user_type);

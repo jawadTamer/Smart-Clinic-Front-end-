@@ -1,9 +1,67 @@
-h2 {
-  color: var(--clinic-primary);
-  margin-bottom: 1rem;
-}
 
-p {
-  color: #333;
-  font-size: 1.1rem;
+
+.schedule-container {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(37,99,235,0.08);
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 500px;
+}
+.schedule-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.schedule-form label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.schedule-form input,
+.schedule-form select {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  font-size: 1rem;
+}
+.schedule-form button {
+  background: linear-gradient(135deg, var(--clinic-primary), var(--clinic-secondary));
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.schedule-form button:disabled {
+  background: #e9ecef;
+  color: #aaa;
+  cursor: not-allowed;
+}
+.error {
+  color: #ff5252;
+  font-weight: 600;
+}
+.schedules-list {
+  margin-top: 2rem;
+}
+.schedules-list ul {
+  list-style: none;
+  padding: 0;
+}
+.schedules-list li {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.available {
+  color: #16a34a;
+  font-weight: 600;
+}
+.unavailable {
+  color: #d33;
+  font-weight: 600;
 }

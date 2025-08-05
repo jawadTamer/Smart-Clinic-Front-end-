@@ -21,6 +21,11 @@ export class HeaderComponent implements OnInit {
   imageRetryCount = 0;
   maxRetries = 10;
   imageLoading = false;
+  
+  
+  isHeaderVisible = true;
+  lastScrollTop = 0;
+  scrollThreshold = 100; 
 
   constructor(private router: Router, private authService: AuthService) {}
 
@@ -32,6 +37,25 @@ export class HeaderComponent implements OnInit {
       this.imageRetryCount = 0;
       this.imageLoading = true;
     });
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll(event: Event) {
+    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    if (Math.abs(currentScrollTop - this.lastScrollTop) < this.scrollThreshold) {
+      return;
+    }
+    
+    if (currentScrollTop > this.lastScrollTop && currentScrollTop > this.scrollThreshold) {
+      this.isHeaderVisible = false;
+    } 
+    
+    else if (currentScrollTop < this.lastScrollTop) {
+      this.isHeaderVisible = true;
+    }
+    
+    this.lastScrollTop = currentScrollTop;
   }
 
   @HostListener('document:click', ['$event'])

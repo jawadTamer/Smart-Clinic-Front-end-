@@ -66,13 +66,21 @@ export interface User {
   profile_picture?: string;
   doctor_id?: string;
   patient_id?: string;
+  phone?: string;
+  address?: string;
+  date_of_birth?: string;
+  emergency_contact?: string;
+  medical_history?: string;
+  gender?: 'M' | 'F';
 }
 
 export interface LoginResponse {
+  message: string;
   user: User;
-  token?: string;
-  access?: string;
-  refresh?: string;
+  tokens: {
+    refresh: string;
+    access: string;
+  };
 }
 
 @Injectable({

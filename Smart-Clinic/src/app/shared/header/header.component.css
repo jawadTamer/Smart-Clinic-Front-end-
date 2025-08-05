@@ -6,8 +6,17 @@
   );
   padding: 1rem 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 9998;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(0);
+}
+
+.navbar.header-hidden {
+  transform: translateY(-100%);
 }
 
 .navbar::before {
@@ -219,6 +228,7 @@
 @media (max-width: 575.98px) {
   .navbar {
     padding: 0.5rem 0.75rem;
+    min-height: 70px; /* Ensure consistent height on small screens */
   }
 
   .brand-text {
@@ -237,6 +247,30 @@
   .auth-buttons-mobile .btn {
     padding: 0.75rem 1rem;
     font-size: 1rem;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .navbar {
+    min-height: 75px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .navbar {
+    min-height: 80px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .navbar {
+    min-height: 85px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .navbar {
+    min-height: 90px;
   }
 }
 

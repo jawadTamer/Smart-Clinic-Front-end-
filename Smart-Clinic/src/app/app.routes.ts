@@ -53,6 +53,16 @@ export const routes: Routes = [
         (m) => m.PatientDashboardComponent
       ),
     canActivate: [PatientGuard],
+    children: [
+      { path: '', redirectTo: 'profile', pathMatch: 'full' },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import(
+            './dashboards/patient-dashboard/profile/profile.component'
+          ).then((m) => m.PatientProfileComponent),
+      },
+    ],
   },
   {
     path: 'dashboards/doctor-dashboard',

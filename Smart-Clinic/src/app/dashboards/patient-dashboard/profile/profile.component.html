@@ -1,0 +1,295 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="profile-info">
+      <div class="profile-avatar">
+        <img
+          *ngIf="getProfilePictureUrl() && !imageLoadError"
+          [src]="getProfilePictureUrl()"
+          [alt]="currentUser?.first_name"
+          class="profile-pic"
+          (error)="onImageError($event)"
+          (load)="onImageLoad($event)"
+        />
+        <div class="loading-overlay" *ngIf="imageLoading">
+          <i class="fas fa-spinner fa-spin"></i>
+        </div>
+      </div>
+      <div class="profile-details">
+        <h2>
+          {{ patientProfile?.user?.first_name || currentUser?.first_name }}
+          {{ patientProfile?.user?.last_name || currentUser?.last_name }}
+        </h2>
+        <p class="user-type">Patient Profile</p>
+        <p class="user-email">
+          {{ patientProfile?.user?.email || currentUser?.email }}
+        </p>
+        <div class="profile-info-grid">
+          <div class="info-item" *ngIf="patientProfile?.user?.address">
+            <span class="info-label">Address:</span>
+            <span class="info-value">{{ patientProfile?.user?.address }}</span>
+          </div>
+          <div class="info-item" *ngIf="patientProfile?.blood_type">
+            <span class="info-label">Blood Type:</span>
+            <span class="info-value blood-type">{{
+              patientProfile?.blood_type
+            }}</span>
+          </div>
+          <div class="age-info" *ngIf="calculateAge()">
+            <span class="age-label">Age:</span>
+            <span class="age-value">{{ calculateAge() }} years old</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="profile-actions">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="toggleEdit()"
+        [disabled]="loading"
+      >
+        <i
+          class="fas"
+          [class.fa-edit]="!isEditing"
+          [class.fa-times]="isEditing"
+        ></i>
+        {{ isEditing ? "Cancel" : "Edit Profile" }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading && !patientProfile">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Loading profile...</p>
+    </div>
+  </div>
+
+  <!-- Success/Error Messages -->
+  <div class="alerts">
+    <div class="alert alert-success" *ngIf="successMessage">
+      <i class="fas fa-check-circle"></i>
+      {{ successMessage }}
+    </div>
+    <div class="alert alert-danger" *ngIf="error">
+      <i class="fas fa-exclamation-circle"></i>
+      {{ error }}
+    </div>
+  </div>
+
+  <!-- Profile Form -->
+  <div class="profile-form-container">
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <div class="form-sections">
+        <!-- Personal Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <i class="fas fa-user"></i>
+            Personal Information
+          </h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="first_name">First Name *</label>
+              <input
+                type="text"
+                id="first_name"
+                formControlName="first_name"
+                class="form-control"
+                [class.is-invalid]="getFieldError('first_name')"
+                [readonly]="!isEditing"
+              />
+              <div class="invalid-feedback">
+                {{ getFieldError("first_name") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="last_name">Last Name *</label>
+              <input
+                type="text"
+                id="last_name"
+                formControlName="last_name"
+                class="form-control"
+                [class.is-invalid]="getFieldError('last_name')"
+                [readonly]="!isEditing"
+              />
+              <div class="invalid-feedback">
+                {{ getFieldError("last_name") }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-control"
+                [class.is-invalid]="getFieldError('email')"
+                [readonly]="!isEditing"
+              />
+              <div class="invalid-feedback">{{ getFieldError("email") }}</div>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input
+                type="tel"
+                id="phone"
+                formControlName="phone"
+                class="form-control"
+                [class.is-invalid]="getFieldError('phone')"
+                [readonly]="!isEditing"
+                placeholder="+1 (555) 123-4567"
+              />
+              <div class="invalid-feedback">{{ getFieldError("phone") }}</div>
+            </div>
+
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <select
+                id="gender"
+                formControlName="gender"
+                class="form-control"
+                [disabled]="!isEditing"
+              >
+                <option value="">Select Gender</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="date_of_birth">Date of Birth</label>
+              <input
+                type="date"
+                id="date_of_birth"
+                formControlName="date_of_birth"
+                class="form-control"
+                [readonly]="!isEditing"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="blood_type">Blood Type</label>
+              <select
+                id="blood_type"
+                formControlName="blood_type"
+                class="form-control"
+                [disabled]="!isEditing"
+              >
+                <option value="">Select Blood Type</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="address">Address</label>
+              <textarea
+                id="address"
+                formControlName="address"
+                class="form-control"
+                rows="2"
+                [readonly]="!isEditing"
+                placeholder="Enter your full address"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Emergency Contact Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <i class="fas fa-phone-alt"></i>
+            Emergency Contact
+          </h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="emergency_contact_name">Emergency Contact Name</label>
+              <input
+                type="text"
+                id="emergency_contact_name"
+                formControlName="emergency_contact_name"
+                class="form-control"
+                [readonly]="!isEditing"
+                placeholder="Contact person's name"
+              />
+            </div>
+            <div class="form-group">
+              <label for="emergency_contact">Emergency Contact Phone</label>
+              <input
+                type="tel"
+                id="emergency_contact"
+                formControlName="emergency_contact"
+                class="form-control"
+                [readonly]="!isEditing"
+                placeholder="Contact phone number"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Medical Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <i class="fas fa-notes-medical"></i>
+            Medical Information
+          </h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="allergies">Allergies</label>
+              <textarea
+                id="allergies"
+                formControlName="allergies"
+                class="form-control"
+                rows="2"
+                [readonly]="!isEditing"
+                placeholder="List any known allergies..."
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="medical_history">Medical History</label>
+              <textarea
+                id="medical_history"
+                formControlName="medical_history"
+                class="form-control"
+                rows="3"
+                [readonly]="!isEditing"
+                placeholder="Chronic conditions, previous surgeries, medications..."
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions" *ngIf="isEditing">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="toggleEdit()"
+          [disabled]="loading"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="profileForm.invalid || loading"
+        >
+          <i class="fas fa-save"></i>
+          <span *ngIf="!loading">Save Changes</span>
+          <span *ngIf="loading">Saving...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

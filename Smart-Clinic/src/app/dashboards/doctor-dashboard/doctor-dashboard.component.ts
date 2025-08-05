@@ -5,6 +5,7 @@ import { AuthService, User } from '../../core/services/auth.service';
 import {
   DoctorService,
   DoctorDetails,
+  DoctorApiResponse,
 } from '../../core/services/doctor.service';
 
 @Component({
@@ -12,7 +13,7 @@ import {
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './doctor-dashboard.component.html',
-  styleUrl: './doctor-dashboard.component.css',
+  styleUrls: ['./doctor-dashboard.component.css'],
 })
 export class DoctorDashboardComponent {
   isSidebarOpen = true;
@@ -28,7 +29,7 @@ export class DoctorDashboardComponent {
       this.currentUser = user;
       if (user && user.user_type === 'doctor' && user.doctor_id) {
         this.doctorService.getDoctorById(user.doctor_id).subscribe({
-          next: (doctor: DoctorDetails) => {
+          next: (doctor: DoctorApiResponse) => {
             this.specialization = doctor.specialization;
           },
           error: (err) => {

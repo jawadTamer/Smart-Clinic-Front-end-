@@ -1,2 +1,45 @@
-<h2>Schedule</h2>
-<p>Doctor schedule goes here.</p>
+<div class="schedule-container">
+  <h2>Doctor Schedule</h2>
+  <form
+    [formGroup]="scheduleForm"
+    (ngSubmit)="createSchedule()"
+    class="schedule-form"
+  >
+    <label for="day">Day:</label>
+    <select id="day" formControlName="day">
+      <option *ngFor="let d of days" [value]="d">{{ d }}</option>
+    </select>
+
+    <label for="start_time">Start Time:</label>
+    <input type="time" id="start_time" formControlName="start_time" />
+
+    <label for="end_time">End Time:</label>
+    <input type="time" id="end_time" formControlName="end_time" />
+
+    <label>
+      <input type="checkbox" formControlName="is_available" /> Available
+    </label>
+
+    <button type="submit" [disabled]="loading || scheduleForm.invalid">
+      Create Schedule
+    </button>
+    <div *ngIf="error" class="error">{{ error }}</div>
+  </form>
+
+  <div class="schedules-list">
+    <h3>All Schedules</h3>
+    <div *ngIf="loading">Loading...</div>
+    <ul>
+      <li *ngFor="let s of schedules">
+        <strong>{{ s.day }}</strong
+        >: {{ s.start_time }} - {{ s.end_time }}
+        <span
+          [class.available]="s.is_available"
+          [class.unavailable]="!s.is_available"
+        >
+          {{ s.is_available ? "Available" : "Unavailable" }}
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
