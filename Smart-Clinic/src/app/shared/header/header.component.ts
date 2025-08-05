@@ -157,4 +157,13 @@ export class HeaderComponent implements OnInit {
 
     return null;
   }
+
+  isHomeActive(): boolean {
+    return this.router.url === '/' || this.router.url === '/home';
+  }
+
+  isDashboardActive(): boolean {
+    const url = this.router.url;
+    return url.startsWith('/dashboards/');
+  }
 }

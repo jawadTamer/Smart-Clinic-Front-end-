@@ -1,20 +1,61 @@
-<div class="patient-dashboard">
-  <div class="dashboard-header">
-    <h1>Patient Dashboard</h1>
-    <p>Welcome, {{ currentUser?.first_name }} {{ currentUser?.last_name }}!</p>
-  </div>
-
-  <div class="dashboard-content">
-    <div class="user-info-card">
-      <h3>Your Information</h3>
-      <p><strong>Username:</strong> {{ currentUser?.username }}</p>
-      <p><strong>Email:</strong> {{ currentUser?.email }}</p>
-      <p><strong>User Type:</strong> {{ currentUser?.user_type }}</p>
-    </div>
-
-    <div class="dashboard-stats">
-      <h3>Dashboard Features Coming Soon</h3>
-      <p>This is the patient dashboard. More features will be added here.</p>
+<div class="patient-dashboard-root">
+  <div
+    class="patient-dashboard-container"
+    [class.sidebar-closed]="!isSidebarOpen"
+  >
+    <aside class="sidebar" [class.closed]="!isSidebarOpen">
+      <div class="sidebar-header">
+        <i class="fas fa-user"></i>
+        <span>Patient Dashboard</span>
+      </div>
+      <nav class="sidebar-nav">
+        <!-- *TODO: Update these links -->
+        <a
+          routerLink="profile"
+          routerLinkActive="active"
+          (click)="closeSidebarOnMobile()"
+        >
+          <i class="fas fa-user"></i> <span class="nav-label">Profile</span>
+        </a>
+        <a
+          routerLink="appointments"
+          routerLinkActive="active"
+          (click)="closeSidebarOnMobile()"
+        >
+          <i class="fas fa-calendar-check"></i>
+          <span class="nav-label">Appointments</span>
+        </a>
+        <a
+          routerLink="doctors"
+          routerLinkActive="active"
+          (click)="closeSidebarOnMobile()"
+        >
+          <i class="fas fa-user-md"></i> <span class="nav-label">Doctors</span>
+        </a>
+        <a
+          routerLink="schedule"
+          routerLinkActive="active"
+          (click)="closeSidebarOnMobile()"
+        >
+          <i class="fas fa-clock"></i> <span class="nav-label">Schedule</span>
+        </a>
+      </nav>
+    </aside>
+    <div class="dashboard-main-area">
+      <header class="dashboard-header">
+        <button class="sidebar-toggle" (click)="toggleSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+        <span class="dashboard-title">
+          <span class="welcome-message">Welcome,</span>
+          <span class="user-name"
+            >{{ currentUser?.first_name }} {{ currentUser?.last_name }}</span
+          >
+        </span>
+      </header>
+      <main class="dashboard-content">
+        <router-outlet></router-outlet>
+      </main>
     </div>
   </div>
 </div>

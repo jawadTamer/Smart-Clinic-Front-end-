@@ -351,6 +351,18 @@
   background-color: #f8f9fa;
 }
 
+.dropdown-item.active {
+  background: linear-gradient(
+    90deg,
+    var(--clinic-primary) 60%,
+    var(--clinic-secondary) 100%
+  );
+  color: #fff !important;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+}
+
 .dropdown-item i {
   width: 16px;
   color: #666;

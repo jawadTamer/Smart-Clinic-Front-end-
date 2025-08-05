@@ -61,6 +61,37 @@ export const routes: Routes = [
         (m) => m.DoctorDashboardComponent
       ),
     canActivate: [DoctorGuard],
+    children: [
+      { path: '', redirectTo: 'profile', pathMatch: 'full' },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import(
+            './dashboards/doctor-dashboard/profile/profile.component'
+          ).then((m) => m.ProfileComponent),
+      },
+      {
+        path: 'appointments',
+        loadComponent: () =>
+          import(
+            './dashboards/doctor-dashboard/appointments/appointments.component'
+          ).then((m) => m.AppointmentsComponent),
+      },
+      {
+        path: 'patients',
+        loadComponent: () =>
+          import(
+            './dashboards/doctor-dashboard/patients/patients.component'
+          ).then((m) => m.PatientsComponent),
+      },
+      {
+        path: 'schedule',
+        loadComponent: () =>
+          import(
+            './dashboards/doctor-dashboard/schedule/schedule.component'
+          ).then((m) => m.ScheduleComponent),
+      },
+    ],
   },
   { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];

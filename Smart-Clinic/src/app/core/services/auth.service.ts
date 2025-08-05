@@ -55,7 +55,7 @@ export interface LoginCredentials {
 }
 
 export interface User {
-  id: number;
+  id: number | string;
   username: string;
   email: string;
   first_name: string;
@@ -64,6 +64,8 @@ export interface User {
   is_staff?: boolean;
   is_superuser?: boolean;
   profile_picture?: string;
+  doctor_id?: string;
+  patient_id?: string;
 }
 
 export interface LoginResponse {

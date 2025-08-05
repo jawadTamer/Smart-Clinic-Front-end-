@@ -28,7 +28,6 @@ export class PatientRegisterComponent implements OnInit {
     private authService: AuthService
   ) {
     this.patientForm = this.fb.group({
-      // Common fields
       username: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
@@ -40,8 +39,6 @@ export class PatientRegisterComponent implements OnInit {
       date_of_birth: ['', [Validators.required]],
       gender: ['', [Validators.required]],
       profile_picture: [null],
-
-      // Patient-specific fields
       medical_history: [''],
       allergies: [''],
       emergency_contact: [
@@ -58,7 +55,6 @@ export class PatientRegisterComponent implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         Swal.fire({
           icon: 'error',
@@ -67,7 +63,6 @@ export class PatientRegisterComponent implements OnInit {
         });
         return;
       }
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         Swal.fire({
           icon: 'error',
@@ -98,43 +93,22 @@ export class PatientRegisterComponent implements OnInit {
         }
       });
 
-      // Add user_type
       formData.append('user_type', 'patient');
-
-      const patientFields = [
-        'medical_history',
-        'allergies',
-        'emergency_contact',
-        'emergency_contact_name',
-        'blood_type',
-      ];
-      patientFields.forEach((field) => {
-        const value = formData.get(field);
-        console.log(`${field}: ${value}`);
-      });
-
-      for (let [key, value] of formData.entries()) {
-        console.log(key, '►', value);
-      }
 
       this.authService.register(formData).subscribe({
         next: (response) => {
           this.isLoading = false;
-          console.log('Registration successful:', response);
-          console.log('Response data:', response);
-
           Swal.fire({
             icon: 'success',
             title: 'Registration Successful!',
-            text: 'Your patient account has been created successfully.',
-            confirmButtonText: 'Continue to Dashboard',
+            text: 'You can now log in.',
+            confirmButtonText: 'Go to Login',
           }).then(() => {
-            this.router.navigate(['/dashboards/patient-dashboard']);
+            this.router.navigate(['/auth/login']);
           });
         },
         error: (error) => {
           this.isLoading = false;
-          // Display error message to user
           if (error.error && typeof error.error === 'object') {
             const errorMessages = [];
             for (const [field, messages] of Object.entries(error.error)) {
@@ -159,7 +133,6 @@ export class PatientRegisterComponent implements OnInit {
         },
       });
     } else {
-      // Mark all fields as touched to show validation errors
       Object.keys(this.patientForm.controls).forEach((key) => {
         const control = this.patientForm.get(key);
         control?.markAsTouched();
