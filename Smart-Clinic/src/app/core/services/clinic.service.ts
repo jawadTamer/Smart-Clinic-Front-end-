@@ -4,12 +4,15 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface Clinic {
-  id: number;
+  id: string;
   name: string;
   address: string;
   phone: string;
   email: string;
-  description?: string;
+  description: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface NewClinic {
@@ -18,6 +21,13 @@ export interface NewClinic {
   phone: string;
   email: string;
   description?: string;
+}
+
+export interface ClinicsApiResponse {
+  results: Clinic[];
+  count: number;
+  next: string | null;
+  previous: string | null;
 }
 
 @Injectable({
@@ -32,10 +42,11 @@ export class ClinicService {
     return this.http.get<Clinic[]>(`${this.apiUrl}/clinics/`);
   }
 
+  getAllClinics(): Observable<ClinicsApiResponse> {
+    return this.http.get<ClinicsApiResponse>(`${this.apiUrl}/clinics/`);
+  }
+
   createClinic(clinicData: NewClinic): Observable<Clinic> {
-    return this.http.post<Clinic>(
-      `${this.apiUrl}/clinics/create/`,
-      clinicData
-    );
+    return this.http.post<Clinic>(`${this.apiUrl}/clinics/create/`, clinicData);
   }
 }

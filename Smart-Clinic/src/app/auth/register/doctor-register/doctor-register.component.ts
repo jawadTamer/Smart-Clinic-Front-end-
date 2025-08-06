@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  AbstractControl,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -47,25 +48,28 @@ export class DoctorRegisterComponent implements OnInit {
     private authService: AuthService,
     private clinicService: ClinicService
   ) {
-    this.doctorForm = this.fb.group({
-      username: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      password2: ['', [Validators.required]],
-      first_name: ['', [Validators.required]],
-      last_name: ['', [Validators.required]],
-      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{11}$/)]],
-      address: ['', [Validators.required]],
-      date_of_birth: ['', [Validators.required]],
-      gender: ['', [Validators.required]],
-      profile_picture: [null],
-      specialization: ['', [Validators.required]],
-      license_number: ['', [Validators.required]],
-      experience_years: [0, [Validators.required, Validators.min(0)]],
-      consultation_fee: [0, [Validators.required, Validators.min(0)]],
-      bio: [''],
-      clinic: ['', [Validators.required]],
-    });
+    this.doctorForm = this.fb.group(
+      {
+        username: ['', [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        password2: ['', [Validators.required]],
+        first_name: ['', [Validators.required]],
+        last_name: ['', [Validators.required]],
+        phone: ['', [Validators.required, Validators.pattern(/^[0-9]{11}$/)]],
+        address: ['', [Validators.required]],
+        date_of_birth: ['', [Validators.required]],
+        gender: ['', [Validators.required]],
+        profile_picture: [null],
+        specialization: ['', [Validators.required]],
+        license_number: ['', [Validators.required]],
+        experience_years: [0, [Validators.required, Validators.min(0)]],
+        consultation_fee: [0, [Validators.required, Validators.min(0)]],
+        bio: [''],
+        clinic: ['', [Validators.required]],
+      },
+      { validators: this.passwordMatchValidator.bind(this) }
+    );
   }
 
   ngOnInit() {
@@ -129,6 +133,7 @@ export class DoctorRegisterComponent implements OnInit {
     if (this.doctorForm.valid) {
       this.isLoading = true;
       const formData = new FormData();
+
       Object.keys(this.doctorForm.value).forEach((key) => {
         const value = this.doctorForm.get(key)?.value;
         if (value !== null && value !== undefined) {
@@ -151,6 +156,8 @@ export class DoctorRegisterComponent implements OnInit {
         },
         error: (error) => {
           this.isLoading = false;
+          console.error('Registration error:', error);
+
           if (error.error && typeof error.error === 'object') {
             const errorMessages = [];
             for (const [field, messages] of Object.entries(error.error)) {
@@ -160,6 +167,7 @@ export class DoctorRegisterComponent implements OnInit {
                 errorMessages.push(`${field}: ${messages}`);
               }
             }
+
             Swal.fire({
               icon: 'error',
               title: 'Registration failed',
@@ -180,6 +188,15 @@ export class DoctorRegisterComponent implements OnInit {
         control?.markAsTouched();
       });
     }
+  }
+
+  passwordMatchValidator(form: AbstractControl) {
+    const password = form.get('password');
+    const password2 = form.get('password2');
+    if (password && password2 && password.value !== password2.value) {
+      return { passwordMismatch: true };
+    }
+    return null;
   }
 
   getFieldError(fieldName: string): string {
@@ -211,6 +228,15 @@ export class DoctorRegisterComponent implements OnInit {
         } must be at least ${field.errors['min'].min}`;
       }
     }
+
+    // Check for password mismatch at form level
+    if (
+      fieldName === 'password2' &&
+      this.doctorForm.errors?.['passwordMismatch']
+    ) {
+      return 'Passwords do not match';
+    }
+
     return '';
   }
 }

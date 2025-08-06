@@ -41,3 +41,219 @@
     ></div>
   </div>
 </div>
+
+<!-- Doctors Section -->
+<section class="doctors-section py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Our Expert Doctors</h2>
+      <p class="section-subtitle">
+        Meet our team of experienced healthcare professionals ready to serve you
+      </p>
+    </div>
+
+    <!-- Specialization Filter -->
+    <div class="filter-section mb-4">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="specialization-filters">
+            <mat-chip-listbox aria-label="Doctor specializations">
+              <mat-chip-option
+                *ngFor="let spec of specializations"
+                [selected]="selectedSpecialization === spec"
+                (click)="filterBySpecialization(spec)"
+                class="specialization-chip"
+              >
+                {{ spec }}
+              </mat-chip-option>
+            </mat-chip-listbox>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="text-center mb-4" *ngIf="isLoadingDoctors">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p class="mt-3">Loading doctors...</p>
+    </div>
+
+    <!-- Doctors Cards -->
+    <div class="row" *ngIf="!isLoadingDoctors">
+      <div
+        class="col-lg-4 col-md-6 mb-4"
+        *ngFor="let doctor of filteredDoctors"
+      >
+        <mat-card class="doctor-card h-100">
+          <div class="card-header">
+            <div class="doctor-image-container">
+              <img
+                [src]="getDoctorImage(doctor)"
+                [alt]="getDoctorFullName(doctor)"
+                class="doctor-image"
+                (error)="onImageError($event)"
+                (load)="onImageLoad($event)"
+              />
+              <div
+                class="availability-badge"
+                [class.available]="doctor.is_available"
+              >
+                <mat-icon>{{
+                  doctor.is_available ? "check_circle" : "schedule"
+                }}</mat-icon>
+                <span>{{ doctor.is_available ? "Available" : "Busy" }}</span>
+              </div>
+            </div>
+          </div>
+
+          <mat-card-content class="p-3">
+            <div class="doctor-info">
+              <h5 class="doctor-name">{{ getDoctorFullName(doctor) }}</h5>
+              <p class="doctor-specialization">
+                <mat-icon class="specialty-icon">medical_services</mat-icon>
+                {{ doctor.specialization }}
+              </p>
+
+              <div class="doctor-details">
+                <div class="detail-item">
+                  <mat-icon>work</mat-icon>
+                  <span>{{ doctor.experience_years }} years experience</span>
+                </div>
+
+                <div class="detail-item">
+                  <mat-icon>location_on</mat-icon>
+                  <span>{{ doctor.clinic.name }}</span>
+                </div>
+
+                <div class="detail-item">
+                  <mat-icon>attach_money</mat-icon>
+                  <span>{{ doctor.consultation_fee }} EGP</span>
+                </div>
+              </div>
+
+              <div class="doctor-bio" *ngIf="doctor.bio">
+                <p>
+                  {{
+                    doctor.bio.length > 100
+                      ? (doctor.bio | slice : 0 : 100) + "..."
+                      : doctor.bio
+                  }}
+                </p>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions class="p-3 pt-0">
+            <button
+              mat-raised-button
+              color="primary"
+              class="book-btn w-100"
+              (click)="bookAppointment(doctor)"
+              [disabled]="!doctor.is_available"
+            >
+              <mat-icon>event</mat-icon>
+              {{ doctor.is_available ? "Book Appointment" : "Not Available" }}
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- No Doctors Found -->
+    <div
+      class="text-center py-5"
+      *ngIf="!isLoadingDoctors && filteredDoctors.length === 0"
+    >
+      <mat-icon class="no-results-icon">search_off</mat-icon>
+      <h4 class="mt-3">No doctors found</h4>
+      <p class="text-muted">Try selecting a different specialization</p>
+    </div>
+  </div>
+</section>
+
+<!-- Clinics Section -->
+<section class="clinics-section py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Our Partner Clinics</h2>
+      <p class="section-subtitle">
+        Discover our network of trusted healthcare facilities across the region
+      </p>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="text-center mb-4" *ngIf="isLoadingClinics">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p class="mt-3">Loading clinics...</p>
+    </div>
+
+    <!-- Clinics Cards -->
+    <div class="row" *ngIf="!isLoadingClinics">
+      <div class="col-lg-4 col-md-6 mb-4" *ngFor="let clinic of clinics">
+        <mat-card class="clinic-card h-100">
+          <mat-card-content class="p-3">
+            <div class="clinic-info">
+              <div
+                class="d-flex justify-content-between align-items-start mb-3"
+              >
+                <h5 class="clinic-name">{{ clinic.name }}</h5>
+              </div>
+
+              <div class="clinic-details">
+                <div class="detail-item">
+                  <mat-icon>location_on</mat-icon>
+                  <span>{{ clinic.address }}</span>
+                </div>
+
+                <div class="detail-item">
+                  <mat-icon>phone</mat-icon>
+                  <span>{{ clinic.phone }}</span>
+                </div>
+
+                <div class="detail-item">
+                  <mat-icon>email</mat-icon>
+                  <span>{{ clinic.email }}</span>
+                </div>
+              </div>
+
+              <div
+                class="clinic-description"
+                *ngIf="clinic.description && clinic.description.trim()"
+              >
+                <p>
+                  {{
+                    clinic.description && clinic.description.length > 100
+                      ? (clinic.description | slice : 0 : 100) + "..."
+                      : clinic.description
+                  }}
+                </p>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions class="p-3 pt-0">
+            <button
+              mat-raised-button
+              color="primary"
+              class="view-clinic-btn w-100"
+              [disabled]="!clinic.is_active"
+            >
+              <mat-icon>visibility</mat-icon>
+              {{ clinic.is_active ? "View Clinic" : "Temporarily Closed" }}
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- No Clinics Found -->
+    <div
+      class="text-center py-5"
+      *ngIf="!isLoadingClinics && clinics.length === 0"
+    >
+      <mat-icon class="no-results-icon">search_off</mat-icon>
+      <h4 class="mt-3">No clinics found</h4>
+      <p class="text-muted">No partner clinics available at the moment</p>
+    </div>
+  </div>
+</section>

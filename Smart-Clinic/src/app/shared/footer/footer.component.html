@@ -1,1 +1,84 @@
-<p>footer works!</p>
+<footer class="footer">
+  <div class="footer-content">
+    <div class="container">
+      <div class="row">
+        <!-- Company Information -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="footer-section">
+            <h5 class="footer-title">Smart Clinic</h5>
+            <p class="footer-description">
+              Your trusted healthcare partner providing quality medical services
+              with modern technology and experienced professionals. We're here
+              to ensure your health and wellbeing.
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="col-lg-2 col-md-6 mb-4">
+          <div class="footer-section">
+            <h6 class="footer-subtitle">Quick Links</h6>
+            <ul class="footer-links">
+              <li *ngFor="let link of quickLinks">
+                <a [routerLink]="link.route">{{ link.name }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Services -->
+        <div class="col-lg-2 col-md-6 mb-4">
+          <div class="footer-section">
+            <h6 class="footer-subtitle">Our Services</h6>
+            <ul class="footer-links">
+              <li *ngFor="let service of services">
+                <a [routerLink]="service.route">{{ service.name }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="footer-section">
+            <h6 class="footer-subtitle">Contact Us</h6>
+            <div class="contact-info">
+              <div class="contact-item">
+                <mat-icon>phone</mat-icon>
+                <span>{{ contactInfo.phone }}</span>
+              </div>
+              <div class="contact-item">
+                <mat-icon>email</mat-icon>
+                <span>{{ contactInfo.email }}</span>
+              </div>
+              <div class="contact-item">
+                <mat-icon>location_on</mat-icon>
+                <span>{{ contactInfo.address }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <p class="copyright">
+            &copy; {{ currentYear }} Jawad. All rights reserved.
+          </p>
+        </div>
+        <div class="col-md-6">
+          <div class="footer-bottom-links">
+            <a href="/privacy-policy">Privacy Policy</a>
+            <a href="/terms-of-service">Terms of Service</a>
+            <a href="/cookie-policy">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,11 +1,7 @@
 .navbar {
-  background: linear-gradient(
-    135deg,
-    var(--clinic-primary) 0%,
-    var(--clinic-secondary) 100%
-  );
+  background: var(--clinic-primary) !important;
+
   padding: 1rem 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 0;
