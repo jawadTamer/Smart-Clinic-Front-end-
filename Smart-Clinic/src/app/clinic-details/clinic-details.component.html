@@ -1,0 +1,201 @@
+<div class="clinic-details-container">
+  <!-- Header with back button -->
+  <div class="page-header">
+    <button mat-icon-button (click)="goBack()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1 class="page-title">Clinic Details</h1>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading clinic details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <mat-icon color="warn">error_outline</mat-icon>
+    <h3>{{ error }}</h3>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      Go Back
+    </button>
+  </div>
+
+  <!-- Clinic Details Content -->
+  <div *ngIf="clinic && !loading" class="content-container">
+    <!-- Clinic Information Card -->
+    <mat-card class="clinic-info-card">
+      <mat-card-header>
+        <div mat-card-avatar class="clinic-avatar">
+          <mat-icon>business</mat-icon>
+        </div>
+        <mat-card-title>{{ clinic.name }}</mat-card-title>
+        <mat-card-subtitle>
+          <mat-chip [color]="clinic.is_active ? 'primary' : 'warn'" selected>
+            <mat-icon>{{
+              clinic.is_active ? "check_circle" : "cancel"
+            }}</mat-icon>
+            {{ clinic.is_active ? "Active" : "Inactive" }}
+          </mat-chip>
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Basic Information -->
+        <div class="clinic-basic-info">
+          <div class="info-section">
+            <h3><mat-icon>info</mat-icon> Basic Information</h3>
+            <div class="info-grid">
+              <div class="info-item" *ngIf="clinic.address">
+                <mat-icon>location_on</mat-icon>
+                <div class="info-content">
+                  <strong>Address:</strong>
+                  <span>{{ clinic.address }}</span>
+                </div>
+              </div>
+
+              <div class="info-item" *ngIf="clinic.phone">
+                <mat-icon>phone</mat-icon>
+                <div class="info-content">
+                  <strong>Phone:</strong>
+                  <span>{{ formatPhoneNumber(clinic.phone) }}</span>
+                </div>
+              </div>
+
+              <div class="info-item" *ngIf="clinic.email">
+                <mat-icon>email</mat-icon>
+                <div class="info-content">
+                  <strong>Email:</strong>
+                  <span>{{ clinic.email }}</span>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <mat-icon>people</mat-icon>
+                <div class="info-content">
+                  <strong>Total Doctors:</strong>
+                  <span>{{ clinic.doctors_count }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="info-section" *ngIf="clinic.description">
+            <h3><mat-icon>description</mat-icon> About</h3>
+            <p class="clinic-description">{{ clinic.description }}</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-divider class="section-divider"></mat-divider>
+
+    <!-- Doctors Section -->
+    <div class="doctors-section">
+      <div class="section-header">
+        <h2><mat-icon>medical_services</mat-icon> Our Doctors</h2>
+        <mat-chip color="accent" selected>
+          {{ clinic.doctors_count }}
+          {{ clinic.doctors_count === 1 ? "Doctor" : "Doctors" }}
+        </mat-chip>
+      </div>
+
+      <!-- No Doctors State -->
+      <div *ngIf="clinic.doctors.length === 0" class="no-doctors">
+        <mat-icon>person_off</mat-icon>
+        <h3>No Doctors Available</h3>
+        <p>This clinic currently has no doctors registered.</p>
+      </div>
+
+      <!-- Doctors Grid -->
+      <div *ngIf="clinic.doctors.length > 0" class="doctors-grid">
+        <mat-card
+          *ngFor="let doctor of clinic.doctors"
+          class="doctor-card"
+          [class.unavailable]="!doctor.is_available"
+        >
+          <div class="doctor-header">
+            <div class="doctor-avatar">
+              <img
+                [src]="getDoctorImage(doctor)"
+                (error)="onImageError($event)"
+                [alt]="doctor.user.first_name + ' ' + doctor.user.last_name"
+                class="doctor-image"
+              />
+            </div>
+            <div class="doctor-basic-info">
+              <h3>
+                Dr. {{ doctor.user.first_name }} {{ doctor.user.last_name }}
+              </h3>
+              <div class="doctor-specialization">
+                <mat-icon>medical_services</mat-icon>
+                <span>{{ doctor.specialization || "General Medicine" }}</span>
+              </div>
+              <div class="doctor-availability">
+                <mat-chip
+                  [color]="doctor.is_available ? 'primary' : 'warn'"
+                  selected
+                >
+                  <mat-icon>{{
+                    doctor.is_available ? "check_circle" : "cancel"
+                  }}</mat-icon>
+                  {{ doctor.is_available ? "Available" : "Not Available" }}
+                </mat-chip>
+              </div>
+            </div>
+          </div>
+
+          <mat-card-content>
+            <!-- Doctor Details -->
+            <div class="doctor-details">
+              <div class="detail-item" *ngIf="doctor.experience_years">
+                <mat-icon>timeline</mat-icon>
+                <span>{{ doctor.experience_years }} years experience</span>
+              </div>
+
+              <div class="detail-item" *ngIf="doctor.consultation_fee">
+                <mat-icon>attach_money</mat-icon>
+                <span>{{ doctor.consultation_fee }} EGP consultation</span>
+              </div>
+
+              <div class="detail-item" *ngIf="doctor.user.email">
+                <mat-icon>email</mat-icon>
+                <span>{{ doctor.user.email }}</span>
+              </div>
+
+              <div class="detail-item" *ngIf="doctor.user.phone">
+                <mat-icon>phone</mat-icon>
+                <span>{{ formatPhoneNumber(doctor.user.phone) }}</span>
+              </div>
+
+              <div
+                class="detail-item"
+                *ngIf="doctor.schedules && doctor.schedules.length > 0"
+              >
+                <mat-icon>schedule</mat-icon>
+                <span
+                  >{{ getAvailableSchedulesCount(doctor) }} available time
+                  slots</span
+                >
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions align="end">
+            <button
+              mat-button
+              color="primary"
+              (click)="viewDoctorDetails(doctor.id)"
+              [disabled]="!doctor.is_available"
+            >
+              <mat-icon>visibility</mat-icon>
+              View Details
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

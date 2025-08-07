@@ -1,0 +1,405 @@
+/* Container */
+.clinic-details-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 20px;
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 0 8px;
+}
+
+.back-btn {
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.back-btn:hover {
+  background-color: #f8f9fa;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+/* Loading and Error States */
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+}
+
+.loading-container p,
+.error-container h3 {
+  margin-top: 16px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.error-container mat-icon {
+  font-size: 4rem;
+  width: 4rem;
+  height: 4rem;
+}
+
+/* Content Container */
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Clinic Info Card */
+.clinic-info-card {
+  margin-bottom: 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+.clinic-avatar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clinic-avatar mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.clinic-basic-info {
+  margin-top: 16px;
+}
+
+.info-section {
+  margin-bottom: 24px;
+}
+
+.info-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #2563eb;
+}
+
+.info-item mat-icon {
+  color: #2563eb;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.info-content {
+  flex: 1;
+}
+
+.info-content strong {
+  display: block;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.info-content span {
+  color: #666;
+}
+
+.clinic-description {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #2563eb;
+  margin: 0;
+  line-height: 1.6;
+  color: #555;
+}
+
+/* Section Divider */
+.section-divider {
+  margin: 32px 0;
+}
+
+/* Doctors Section */
+.doctors-section {
+  margin-top: 32px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.section-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #333;
+  font-weight: 600;
+  margin: 0;
+}
+
+.section-header h2 mat-icon {
+  color: #2563eb;
+}
+
+/* No Doctors State */
+.no-doctors {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.no-doctors mat-icon {
+  font-size: 4rem;
+  width: 4rem;
+  height: 4rem;
+  color: #ccc;
+  margin-bottom: 16px;
+}
+
+.no-doctors h3 {
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.no-doctors p {
+  color: #666;
+  margin: 0;
+}
+
+/* Doctors Grid */
+.doctors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 24px;
+}
+
+.doctor-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.doctor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.doctor-card.unavailable {
+  opacity: 0.7;
+  background: #f9f9f9;
+}
+
+.doctor-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 20px 0 20px;
+}
+
+.doctor-avatar {
+  flex-shrink: 0;
+}
+
+.doctor-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e3f2fd;
+}
+
+.doctor-basic-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.doctor-basic-info h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.doctor-specialization {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.doctor-specialization mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.doctor-availability {
+  margin-bottom: 8px;
+}
+
+/* Doctor Details */
+.doctor-details {
+  margin: 16px 0;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.detail-item mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #999;
+}
+
+.doctor-bio {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid #2563eb;
+}
+
+.doctor-bio p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #555;
+}
+
+/* Card Actions */
+mat-card-actions {
+  padding: 16px 20px 20px 20px;
+  margin: 0;
+  gap: 8px;
+}
+
+mat-card-actions button {
+  flex: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .clinic-details-container {
+    padding: 16px;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .doctors-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .doctor-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .doctor-image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .doctor-basic-info h3 {
+    font-size: 1.1rem;
+  }
+
+  mat-card-actions {
+    flex-direction: column;
+  }
+
+  mat-card-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .clinic-details-container {
+    padding: 12px;
+  }
+
+  .page-header {
+    margin-bottom: 16px;
+  }
+
+  .clinic-info-card,
+  .doctor-card {
+    margin: 0;
+  }
+
+  .info-item {
+    padding: 8px;
+  }
+
+  .doctor-header {
+    padding: 16px 16px 0 16px;
+  }
+
+  mat-card-actions {
+    padding: 12px 16px 16px 16px;
+  }
+}

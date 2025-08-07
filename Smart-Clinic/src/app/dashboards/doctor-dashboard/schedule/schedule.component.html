@@ -1,45 +1,340 @@
 <div class="schedule-container">
-  <h2>Doctor Schedule</h2>
-  <form
-    [formGroup]="scheduleForm"
-    (ngSubmit)="createSchedule()"
-    class="schedule-form"
-  >
-    <label for="day">Day:</label>
-    <select id="day" formControlName="day">
-      <option *ngFor="let d of days" [value]="d">{{ d }}</option>
-    </select>
+  <mat-card class="schedule-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>schedule</mat-icon>
+        Doctor Schedule Management
+      </mat-card-title>
+      <mat-card-subtitle>
+        Create recurring weekly schedules or specific date appointments
+      </mat-card-subtitle>
+    </mat-card-header>
 
-    <label for="start_time">Start Time:</label>
-    <input type="time" id="start_time" formControlName="start_time" />
+    <mat-card-content>
+      <form
+        [formGroup]="scheduleForm"
+        (ngSubmit)="createSchedule()"
+        class="schedule-form"
+      >
+        <!-- Schedule Type Selection -->
+        <div class="form-section">
+          <h3>Schedule Type</h3>
+          <mat-radio-group
+            formControlName="schedule_type"
+            class="schedule-type-group"
+          >
+            <mat-radio-button
+              *ngFor="let type of scheduleTypes"
+              [value]="type.value"
+              class="schedule-type-option"
+            >
+              {{ type.label }}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
 
-    <label for="end_time">End Time:</label>
-    <input type="time" id="end_time" formControlName="end_time" />
+        <!-- Recurring Schedule Fields -->
+        <div class="form-section" *ngIf="isRecurringSchedule">
+          <h3>Weekly Schedule</h3>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Day of Week</mat-label>
+            <mat-select formControlName="day">
+              <mat-option *ngFor="let day of days" [value]="day">
+                {{ day }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="scheduleForm.get('day')?.hasError('required')">
+              Please select a day
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-    <label>
-      <input type="checkbox" formControlName="is_available" /> Available
-    </label>
+        <!-- Specific Date Schedule Fields -->
+        <div class="form-section" *ngIf="isSpecificDateSchedule">
+          <h3>Specific Date</h3>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Select Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="specific_date"
+              [min]="today"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error
+              *ngIf="scheduleForm.get('specific_date')?.hasError('required')"
+            >
+              Please select a date
+            </mat-error>
+            <mat-error
+              *ngIf="scheduleForm.get('specific_date')?.hasError('pastDate')"
+            >
+              Cannot select a past date
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-    <button type="submit" [disabled]="loading || scheduleForm.invalid">
-      Create Schedule
-    </button>
-    <div *ngIf="error" class="error">{{ error }}</div>
-  </form>
+        <!-- Time Selection -->
+        <div class="form-section">
+          <h3>Time Slot</h3>
+          <div class="time-inputs">
+            <mat-form-field appearance="outline">
+              <mat-label>Start Time</mat-label>
+              <input matInput type="time" formControlName="start_time" />
+              <mat-error
+                *ngIf="scheduleForm.get('start_time')?.hasError('required')"
+              >
+                Start time is required
+              </mat-error>
+            </mat-form-field>
 
-  <div class="schedules-list">
-    <h3>All Schedules</h3>
-    <div *ngIf="loading">Loading...</div>
-    <ul>
-      <li *ngFor="let s of schedules">
-        <strong>{{ s.day }}</strong
-        >: {{ s.start_time }} - {{ s.end_time }}
-        <span
-          [class.available]="s.is_available"
-          [class.unavailable]="!s.is_available"
+            <mat-form-field appearance="outline">
+              <mat-label>End Time</mat-label>
+              <input matInput type="time" formControlName="end_time" />
+              <mat-error
+                *ngIf="scheduleForm.get('end_time')?.hasError('required')"
+              >
+                End time is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Availability -->
+        <div class="form-section">
+          <mat-checkbox
+            formControlName="is_available"
+            class="availability-checkbox"
+          >
+            Mark as Available
+          </mat-checkbox>
+        </div>
+
+        <!-- Notes Section -->
+        <div class="form-section">
+          <h3>Additional Notes</h3>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Notes (Optional)</mat-label>
+            <textarea
+              matInput
+              formControlName="notes"
+              rows="3"
+              placeholder="Add any additional notes about this schedule..."
+            ></textarea>
+            <mat-hint
+              >Optional: Add context or special instructions for this
+              schedule</mat-hint
+            >
+          </mat-form-field>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="loading || scheduleForm.invalid"
+            class="submit-btn"
+          >
+            <mat-icon *ngIf="loading">hourglass_empty</mat-icon>
+            <mat-icon *ngIf="!loading && !isEditMode">add_circle</mat-icon>
+            <mat-icon *ngIf="!loading && isEditMode">edit</mat-icon>
+            {{
+              loading
+                ? isEditMode
+                  ? "Updating..."
+                  : "Creating..."
+                : isEditMode
+                ? "Update Schedule"
+                : "Create Schedule"
+            }}
+          </button>
+
+          <button
+            *ngIf="isEditMode"
+            mat-stroked-button
+            type="button"
+            (click)="cancelEdit()"
+            class="cancel-btn"
+          >
+            <mat-icon>cancel</mat-icon>
+            Cancel Edit
+          </button>
+        </div>
+
+        <!-- Error Display -->
+        <div *ngIf="error" class="error-message">
+          <mat-icon>error</mat-icon>
+          {{ error }}
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Schedules Display -->
+  <mat-card class="schedules-list-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>view_list</mat-icon>
+        Current Schedules
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="loading && schedules.length === 0" class="loading-state">
+        <mat-icon>schedule</mat-icon>
+        Loading schedules...
+      </div>
+
+      <div *ngIf="!loading && schedules.length === 0" class="empty-state">
+        <mat-icon>calendar_today</mat-icon>
+        <p>No schedules created yet. Create your first schedule above!</p>
+      </div>
+
+      <!-- Grouped Schedules Display -->
+      <div *ngIf="schedules.length > 0" class="schedules-groups">
+        <!-- Recurring Schedules -->
+        <div
+          *ngIf="getGroupedSchedules().recurring.length > 0"
+          class="schedule-group"
         >
-          {{ s.is_available ? "Available" : "Unavailable" }}
-        </span>
-      </li>
-    </ul>
-  </div>
+          <h3 class="group-title">
+            <mat-icon>repeat</mat-icon>
+            Recurring Weekly Schedules
+          </h3>
+          <div class="schedules-grid">
+            <mat-card
+              *ngFor="let schedule of getGroupedSchedules().recurring"
+              class="schedule-item"
+              [class.available]="schedule.is_available"
+              [class.unavailable]="!schedule.is_available"
+              [class.editing]="
+                editingSchedule && editingSchedule.id === schedule.id
+              "
+            >
+              <mat-card-content>
+                <div class="schedule-day">
+                  <mat-icon>today</mat-icon>
+                  <strong>{{ schedule.day }}</strong>
+                </div>
+                <div class="schedule-time">
+                  <mat-icon>access_time</mat-icon>
+                  {{ schedule.start_time }} - {{ schedule.end_time }}
+                </div>
+                <div class="schedule-notes" *ngIf="schedule.notes">
+                  <mat-icon>note</mat-icon>
+                  <span>{{ schedule.notes }}</span>
+                </div>
+                <div class="schedule-status">
+                  <mat-chip
+                    [color]="schedule.is_available ? 'primary' : 'warn'"
+                    selected
+                  >
+                    <mat-icon>{{
+                      schedule.is_available ? "check_circle" : "cancel"
+                    }}</mat-icon>
+                    {{ schedule.is_available ? "Available" : "Unavailable" }}
+                  </mat-chip>
+                </div>
+                <div class="schedule-actions">
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="editSchedule(schedule)"
+                    [disabled]="loading"
+                    matTooltip="Edit Schedule"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="deleteSchedule(schedule)"
+                    [disabled]="loading"
+                    matTooltip="Delete Schedule"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+
+        <!-- Specific Date Schedules -->
+        <div
+          *ngIf="getGroupedSchedules().specific.length > 0"
+          class="schedule-group"
+        >
+          <h3 class="group-title">
+            <mat-icon>event</mat-icon>
+            Specific Date Schedules
+          </h3>
+          <div class="schedules-grid">
+            <mat-card
+              *ngFor="let schedule of getGroupedSchedules().specific"
+              class="schedule-item"
+              [class.available]="schedule.is_available"
+              [class.unavailable]="!schedule.is_available"
+              [class.editing]="
+                editingSchedule && editingSchedule.id === schedule.id
+              "
+            >
+              <mat-card-content>
+                <div class="schedule-date">
+                  <mat-icon>calendar_today</mat-icon>
+                  <strong>{{ formatDate(schedule.specific_date) }}</strong>
+                </div>
+                <div class="schedule-time">
+                  <mat-icon>access_time</mat-icon>
+                  {{ schedule.start_time }} - {{ schedule.end_time }}
+                </div>
+                <div class="schedule-notes" *ngIf="schedule.notes">
+                  <mat-icon>note</mat-icon>
+                  <span>{{ schedule.notes }}</span>
+                </div>
+                <div class="schedule-status">
+                  <mat-chip
+                    [color]="schedule.is_available ? 'primary' : 'warn'"
+                    selected
+                  >
+                    <mat-icon>{{
+                      schedule.is_available ? "check_circle" : "cancel"
+                    }}</mat-icon>
+                    {{ schedule.is_available ? "Available" : "Unavailable" }}
+                  </mat-chip>
+                </div>
+                <div class="schedule-actions">
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="editSchedule(schedule)"
+                    [disabled]="loading"
+                    matTooltip="Edit Schedule"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="deleteSchedule(schedule)"
+                    [disabled]="loading"
+                    matTooltip="Delete Schedule"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>

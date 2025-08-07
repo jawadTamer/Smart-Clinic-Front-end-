@@ -3,7 +3,7 @@
     <div class="header-content">
       <h1 class="page-title">
         <mat-icon>calendar_today</mat-icon>
-        Patient Appointments
+        My Appointments
       </h1>
       <button
         mat-raised-button
@@ -21,7 +21,7 @@
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
     <mat-spinner></mat-spinner>
-    <p>Loading appointments...</p>
+    <p>Loading your appointments...</p>
   </div>
 
   <!-- Error State -->
@@ -42,7 +42,7 @@
   >
     <mat-icon class="empty-icon">event_busy</mat-icon>
     <h3>No Appointments Found</h3>
-    <p>You don't have any patient appointments scheduled yet.</p>
+    <p>You don't have any appointments scheduled yet.</p>
   </div>
 
   <!-- Appointments List -->
@@ -58,10 +58,12 @@
           </mat-icon>
         </div>
         <mat-card-title>
-          {{ appointment.patient.user.first_name }}
-          {{ appointment.patient.user.last_name }}
+          Dr. {{ appointment.doctor.user.first_name }}
+          {{ appointment.doctor.user.last_name }}
         </mat-card-title>
-        <mat-card-subtitle> Patient </mat-card-subtitle>
+        <mat-card-subtitle>
+          {{ appointment.doctor.specialization }}
+        </mat-card-subtitle>
         <div class="appointment-actions">
           <mat-chip [color]="getStatusColor(appointment.status)" selected>
             {{ appointment.status | titlecase }}
@@ -95,46 +97,19 @@
             </div>
           </div>
 
-          <div class="detail-item" *ngIf="appointment.patient.user.phone">
+          <div class="detail-item" *ngIf="appointment.doctor.user.phone">
             <mat-icon class="detail-icon">phone</mat-icon>
             <div class="detail-content">
-              <strong>Patient's Phone:</strong>
-              <span>{{ appointment.patient.user.phone }}</span>
+              <strong>Doctor's Phone:</strong>
+              <span>{{ appointment.doctor.user.phone }}</span>
             </div>
           </div>
 
           <div class="detail-item">
             <mat-icon class="detail-icon">email</mat-icon>
             <div class="detail-content">
-              <strong>Patient's Email:</strong>
-              <span>{{ appointment.patient.user.email }}</span>
-            </div>
-          </div>
-
-          <div class="detail-item" *ngIf="appointment.patient.medical_history">
-            <mat-icon class="detail-icon">medical_information</mat-icon>
-            <div class="detail-content">
-              <strong>Medical History:</strong>
-              <span>{{ appointment.patient.medical_history }}</span>
-            </div>
-          </div>
-
-          <div class="detail-item" *ngIf="appointment.patient.allergies">
-            <mat-icon class="detail-icon">warning</mat-icon>
-            <div class="detail-content">
-              <strong>Allergies:</strong>
-              <span>{{ appointment.patient.allergies }}</span>
-            </div>
-          </div>
-
-          <div
-            class="detail-item"
-            *ngIf="appointment.patient.emergency_contact"
-          >
-            <mat-icon class="detail-icon">contact_emergency</mat-icon>
-            <div class="detail-content">
-              <strong>Emergency Contact:</strong>
-              <span>{{ appointment.patient.emergency_contact }}</span>
+              <strong>Doctor's Email:</strong>
+              <span>{{ appointment.doctor.user.email }}</span>
             </div>
           </div>
 
@@ -156,41 +131,21 @@
         </div>
       </mat-card-content>
 
-      <mat-card-actions align="end" class="appointment-card-actions">
-        <!-- Confirm Button -->
-        <button
-          mat-button
-          color="primary"
-          (click)="confirmAppointment(appointment.id)"
-          [disabled]="loading || !canConfirm(appointment)"
-          *ngIf="canConfirm(appointment)"
-        >
-          <mat-icon>check_circle</mat-icon>
-          Confirm
-        </button>
-
-        <!-- Complete Button -->
-        <button
-          mat-raised-button
-          color="accent"
-          (click)="completeAppointment(appointment.id)"
-          [disabled]="loading || !canComplete(appointment)"
-          *ngIf="canComplete(appointment)"
-        >
-          <mat-icon>task_alt</mat-icon>
-          Complete
-        </button>
-
-        <!-- Cancel Button -->
+      <mat-card-actions
+        align="end"
+        *ngIf="
+          appointment.status !== 'cancelled' &&
+          appointment.status !== 'completed'
+        "
+      >
         <button
           mat-button
           color="warn"
           (click)="cancelAppointment(appointment.id)"
-          [disabled]="loading || !canCancel(appointment)"
-          *ngIf="canCancel(appointment)"
+          [disabled]="loading"
         >
           <mat-icon>cancel</mat-icon>
-          Cancel
+          Cancel Appointment
         </button>
       </mat-card-actions>
     </mat-card>

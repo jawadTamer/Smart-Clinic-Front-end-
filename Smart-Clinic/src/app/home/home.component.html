@@ -84,7 +84,10 @@
         class="col-lg-4 col-md-6 mb-4"
         *ngFor="let doctor of filteredDoctors"
       >
-        <mat-card class="doctor-card h-100">
+        <mat-card
+          class="doctor-card h-100"
+          (click)="openDoctorDetailsDialog(doctor)"
+        >
           <div class="card-header">
             <div class="doctor-image-container">
               <img
@@ -148,7 +151,7 @@
               mat-raised-button
               color="primary"
               class="book-btn w-100"
-              (click)="bookAppointment(doctor)"
+              (click)="bookAppointment(doctor); $event.stopPropagation()"
               [disabled]="!doctor.is_available"
             >
               <mat-icon>event</mat-icon>
@@ -237,6 +240,7 @@
               color="primary"
               class="view-clinic-btn w-100"
               [disabled]="!clinic.is_active"
+              (click)="viewClinicDetails(clinic)"
             >
               <mat-icon>visibility</mat-icon>
               {{ clinic.is_active ? "View Clinic" : "Temporarily Closed" }}

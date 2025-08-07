@@ -290,6 +290,7 @@
   overflow: hidden !important;
   background: white !important;
   position: relative;
+  cursor: pointer;
 }
 
 .doctor-card:hover {
@@ -654,4 +655,15 @@ mat-spinner {
   font-size: 1.1rem;
   max-width: 600px;
   margin: 0 auto;
+}
+
+/* Dialog Panel Styles */
+::ng-deep .doctor-details-dialog-panel {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+::ng-deep .doctor-details-dialog-panel .mat-mdc-dialog-container {
+  padding: 0 !important;
+  border-radius: 16px !important;
 }

@@ -221,43 +221,10 @@ mat-chip.mat-warn {
   color: white;
 }
 
-/* Card Actions - Enhanced for multiple buttons */
-.appointment-card-actions {
+/* Card Actions */
+mat-card-actions {
   padding: 16px 24px;
   margin: 0;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.appointment-card-actions button {
-  min-width: 100px;
-  transition: all 0.2s ease;
-}
-
-.appointment-card-actions button:hover {
-  transform: translateY(-1px);
-}
-
-.appointment-card-actions button mat-icon {
-  margin-right: 4px;
-}
-
-/* Button specific styling */
-.appointment-card-actions button[color="primary"] {
-  background-color: #1976d2;
-  color: white;
-}
-
-.appointment-card-actions button[color="accent"] {
-  background-color: #ff5722;
-  color: white;
-}
-
-.appointment-card-actions button[color="warn"] {
-  background-color: #f44336;
-  color: white;
 }
 
 /* Responsive Design */
@@ -298,16 +265,6 @@ mat-chip.mat-warn {
   .detail-icon {
     align-self: flex-start;
   }
-
-  .appointment-card-actions {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .appointment-card-actions button {
-    width: 100%;
-    min-width: auto;
-  }
 }
 
 @media (max-width: 480px) {
@@ -329,9 +286,5 @@ mat-chip.mat-warn {
     font-size: 4rem;
     width: 4rem;
     height: 4rem;
-  }
-
-  .appointment-card-actions {
-    padding: 12px 16px;
   }
 }

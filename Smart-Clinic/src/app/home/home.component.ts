@@ -193,12 +193,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   bookAppointment(doctor: Doctor) {
-    // Navigate to appointment booking page or show login modal
-    this.router.navigate(['/login'], {
-      queryParams: {
-        returnUrl: `/book-appointment/${doctor.id}`,
-      },
-    });
+    // Navigate to doctor details page for appointment booking
+    this.router.navigate(['/doctor', doctor.id]);
+  }
+
+  openDoctorDetailsDialog(doctor: Doctor) {
+    // Navigate to doctor details page instead of opening dialog
+    this.router.navigate(['/doctor', doctor.id]);
+  }
+
+  viewClinicDetails(clinic: Clinic) {
+    this.router.navigate(['/clinic', clinic.id]);
   }
 
   onImageError(event: any) {

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { DoctorGuard } from './core/guards/doctor.guard';
 import { PatientGuard } from './core/guards/patient.guard';
 import { AdminGuard } from './core/guards/admin.guard';
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -9,6 +10,22 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () =>
       import('./home/home.component').then((m) => m.HomeComponent),
+  },
+  {
+    path: 'clinic/:id',
+    loadComponent: () =>
+      import('./clinic-details/clinic-details.component').then(
+        (m) => m.ClinicDetailsComponent
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'doctor/:id',
+    loadComponent: () =>
+      import('./doctor-details/doctor-details.component').then(
+        (m) => m.DoctorDetailsComponent
+      ),
+    canActivate: [AuthGuard],
   },
   {
     path: 'auth/login',
@@ -62,6 +79,13 @@ export const routes: Routes = [
             './dashboards/patient-dashboard/profile/profile.component'
           ).then((m) => m.PatientProfileComponent),
       },
+      {
+        path: 'appointments',
+        loadComponent: () =>
+          import(
+            './dashboards/patient-dashboard/appointments/appointments.component'
+          ).then((m) => m.AppointmentsComponent),
+      },
     ],
   },
   {
@@ -86,13 +110,6 @@ export const routes: Routes = [
           import(
             './dashboards/doctor-dashboard/appointments/appointments.component'
           ).then((m) => m.AppointmentsComponent),
-      },
-      {
-        path: 'patients',
-        loadComponent: () =>
-          import(
-            './dashboards/doctor-dashboard/patients/patients.component'
-          ).then((m) => m.PatientsComponent),
       },
       {
         path: 'schedule',

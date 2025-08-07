@@ -1,0 +1,525 @@
+<div class="doctor-details-container">
+  <!-- Header with back button -->
+  <div class="page-header">
+    <button mat-icon-button (click)="goBack()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1 class="page-title">Doctor Details</h1>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading doctor details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <mat-icon>error_outline</mat-icon>
+    <h3>{{ error }}</h3>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      Go Back
+    </button>
+  </div>
+
+  <!-- Doctor Details Content -->
+  <div *ngIf="doctor && !loading" class="content-container">
+    <!-- Navigation Tabs -->
+    <mat-card class="navigation-card">
+      <mat-tab-group
+        mat-stretch-tabs="false"
+        mat-align-tabs="start"
+        [(selectedIndex)]="selectedTabIndex"
+        class="doctor-tabs"
+      >
+        <mat-tab label="Overview">
+          <ng-template matTabContent>
+            <div class="tab-content">
+              <!-- Single Column Layout for Overview -->
+              <div class="overview-layout">
+                <!-- Doctor Information -->
+                <mat-card class="doctor-info-card">
+                  <div class="doctor-header">
+                    <div class="doctor-avatar">
+                      <img
+                        [src]="getDoctorImage()"
+                        (error)="onImageError($event)"
+                        [alt]="
+                          doctor.user.first_name + ' ' + doctor.user.last_name
+                        "
+                        class="doctor-image"
+                      />
+                    </div>
+                    <div class="doctor-basic-info">
+                      <h2 class="doctor-name">
+                        Dr. {{ doctor.user.first_name }}
+                        {{ doctor.user.last_name }}
+                      </h2>
+                      <div class="doctor-specialization">
+                        <mat-icon>medical_services</mat-icon>
+                        <span>{{
+                          doctor.specialization || "General Medicine"
+                        }}</span>
+                      </div>
+                      <div class="doctor-availability">
+                        <mat-chip
+                          [color]="doctor.is_available ? 'primary' : 'warn'"
+                          selected
+                        >
+                          <mat-icon>{{
+                            doctor.is_available ? "check_circle" : "cancel"
+                          }}</mat-icon>
+                          {{
+                            doctor.is_available ? "Available" : "Not Available"
+                          }}
+                        </mat-chip>
+                      </div>
+                    </div>
+                  </div>
+
+                  <mat-card-content class="doctor-details-content">
+                    <!-- Contact Information -->
+                    <div class="detail-section">
+                      <h3>
+                        <mat-icon>contact_mail</mat-icon> Contact Information
+                      </h3>
+                      <div class="detail-grid">
+                        <div class="detail-item" *ngIf="doctor.user.email">
+                          <mat-icon>email</mat-icon>
+                          <span>{{ doctor.user.email }}</span>
+                        </div>
+                        <div class="detail-item" *ngIf="doctor.user.phone">
+                          <mat-icon>phone</mat-icon>
+                          <span>{{ doctor.user.phone }}</span>
+                        </div>
+                        <div class="detail-item" *ngIf="doctor.license_number">
+                          <mat-icon>assignment</mat-icon>
+                          <span>License: {{ doctor.license_number }}</span>
+                        </div>
+                        <div
+                          class="detail-item"
+                          *ngIf="doctor.consultation_fee"
+                        >
+                          <mat-icon>attach_money</mat-icon>
+                          <span
+                            >Consultation Fee:
+                            {{ doctor.consultation_fee }} EGP</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Professional Information -->
+                    <div
+                      class="detail-section"
+                      *ngIf="doctor.experience_years || doctor.bio"
+                    >
+                      <h3>
+                        <mat-icon>work</mat-icon> Professional Information
+                      </h3>
+                      <div class="detail-grid">
+                        <div
+                          class="detail-item"
+                          *ngIf="doctor.experience_years"
+                        >
+                          <mat-icon>timeline</mat-icon>
+                          <span
+                            >{{ doctor.experience_years }} years of
+                            experience</span
+                          >
+                        </div>
+                      </div>
+                      <div class="doctor-bio" *ngIf="doctor.bio">
+                        <h4>About Dr. {{ doctor.user.first_name }}</h4>
+                        <p>{{ doctor.bio }}</p>
+                      </div>
+                    </div>
+
+                    <!-- Clinic Information -->
+                    <div class="detail-section" *ngIf="doctor.clinic">
+                      <h3><mat-icon>business</mat-icon> Clinic Information</h3>
+                      <div class="clinic-info">
+                        <h4>{{ doctor.clinic.name }}</h4>
+                        <div class="detail-item" *ngIf="doctor.clinic.address">
+                          <mat-icon>location_on</mat-icon>
+                          <span>{{ doctor.clinic.address }}</span>
+                        </div>
+                        <div class="detail-item" *ngIf="doctor.clinic.phone">
+                          <mat-icon>local_phone</mat-icon>
+                          <span>{{ doctor.clinic.phone }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            </div>
+          </ng-template>
+        </mat-tab>
+
+        <mat-tab label="Schedule & Booking">
+          <ng-template matTabContent>
+            <div class="tab-content">
+              <!-- Two Column Layout for Schedule Tab -->
+              <div class="two-column-layout">
+                <!-- Left Column - Schedule Display -->
+                <div class="left-column">
+                  <mat-card
+                    class="schedule-display-card"
+                    *ngIf="!schedulesLoading && schedules.length > 0"
+                  >
+                    <mat-card-header>
+                      <mat-card-title>
+                        <mat-icon>schedule</mat-icon>
+                        Doctor's Schedule
+                      </mat-card-title>
+                    </mat-card-header>
+
+                    <mat-card-content>
+                      <!-- Recurring Schedules -->
+                      <div
+                        *ngIf="recurringSchedules.length > 0"
+                        class="schedule-group"
+                      >
+                        <h4><mat-icon>repeat</mat-icon> Weekly Schedule</h4>
+                        <div class="schedule-grid">
+                          <mat-card
+                            *ngFor="let schedule of recurringSchedules"
+                            class="schedule-item-card"
+                          >
+                            <mat-card-content>
+                              <div class="schedule-day">
+                                <mat-icon>today</mat-icon>
+                                <strong>{{ schedule.day }}</strong>
+                              </div>
+                              <div class="schedule-time">
+                                <mat-icon>access_time</mat-icon>
+                                <span
+                                  >{{ schedule.start_time }} -
+                                  {{ schedule.end_time }}</span
+                                >
+                              </div>
+                              <div class="schedule-status">
+                                <mat-chip
+                                  [color]="
+                                    schedule.is_available ? 'primary' : 'warn'
+                                  "
+                                  selected
+                                >
+                                  <mat-icon>{{
+                                    schedule.is_available
+                                      ? "check_circle"
+                                      : "cancel"
+                                  }}</mat-icon>
+                                  {{
+                                    schedule.is_available
+                                      ? "Available"
+                                      : "Unavailable"
+                                  }}
+                                </mat-chip>
+                              </div>
+                              <div
+                                class="schedule-notes"
+                                *ngIf="schedule.notes"
+                              >
+                                <mat-icon>note</mat-icon>
+                                <span>{{ schedule.notes }}</span>
+                              </div>
+                            </mat-card-content>
+                          </mat-card>
+                        </div>
+                      </div>
+
+                      <!-- Specific Date Schedules -->
+                      <div
+                        *ngIf="specificSchedules.length > 0"
+                        class="schedule-group"
+                      >
+                        <h4><mat-icon>event</mat-icon> Specific Dates</h4>
+                        <div class="schedule-grid">
+                          <mat-card
+                            *ngFor="let schedule of specificSchedules"
+                            class="schedule-item-card"
+                          >
+                            <mat-card-content>
+                              <div class="schedule-date">
+                                <mat-icon>calendar_today</mat-icon>
+                                <strong>{{
+                                  formatDate(schedule.specific_date!)
+                                }}</strong>
+                              </div>
+                              <div class="schedule-time">
+                                <mat-icon>access_time</mat-icon>
+                                <span
+                                  >{{ schedule.start_time }} -
+                                  {{ schedule.end_time }}</span
+                                >
+                              </div>
+                              <div class="schedule-status">
+                                <mat-chip
+                                  [color]="
+                                    schedule.is_available ? 'primary' : 'warn'
+                                  "
+                                  selected
+                                >
+                                  <mat-icon>{{
+                                    schedule.is_available
+                                      ? "check_circle"
+                                      : "cancel"
+                                  }}</mat-icon>
+                                  {{
+                                    schedule.is_available
+                                      ? "Available"
+                                      : "Unavailable"
+                                  }}
+                                </mat-chip>
+                              </div>
+                              <div
+                                class="schedule-notes"
+                                *ngIf="schedule.notes"
+                              >
+                                <mat-icon>note</mat-icon>
+                                <span>{{ schedule.notes }}</span>
+                              </div>
+                            </mat-card-content>
+                          </mat-card>
+                        </div>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+
+                <!-- Right Column - Appointment Booking -->
+                <div class="right-column">
+                  <mat-card class="appointment-card">
+                    <mat-card-header>
+                      <mat-card-title>
+                        <mat-icon>event_available</mat-icon>
+                        Book an Appointment
+                      </mat-card-title>
+                    </mat-card-header>
+
+                    <mat-card-content>
+                      <!-- Available Schedules -->
+                      <div
+                        *ngIf="
+                          !schedulesLoading && recurringSchedules.length > 0
+                        "
+                      >
+                        <h4>Book an Appointment</h4>
+                        <p class="info-text">
+                          Select a date that matches the doctor's weekly
+                          schedule or choose from available specific dates.
+                        </p>
+
+                        <!-- Show upcoming specific dates if available -->
+                        <div
+                          *ngIf="upcomingSpecificDates.length > 0"
+                          class="specific-dates-info"
+                        >
+                          <h4>
+                            <mat-icon>event_note</mat-icon> Upcoming Specific
+                            Available Dates
+                          </h4>
+                          <div class="specific-dates-list">
+                            <mat-chip-set>
+                              <mat-chip
+                                *ngFor="
+                                  let date of upcomingSpecificDates.slice(0, 5)
+                                "
+                                (click)="
+                                  selectSpecificDate(date.specific_date!)
+                                "
+                                class="specific-date-chip"
+                              >
+                                <mat-icon matChipAvatar
+                                  >calendar_today</mat-icon
+                                >
+                                {{ formatSpecificDate(date.specific_date!) }}
+                                <span class="chip-time"
+                                  >{{ date.start_time }} -
+                                  {{ date.end_time }}</span
+                                >
+                              </mat-chip>
+                            </mat-chip-set>
+                          </div>
+                          <p class="hint-text">
+                            Click on a date chip to select it quickly, or use
+                            the date picker below.
+                          </p>
+                        </div>
+
+                        <form
+                          [formGroup]="appointmentForm"
+                          (ngSubmit)="bookAppointment()"
+                        >
+                          <!-- Date Selection -->
+                          <mat-form-field
+                            appearance="outline"
+                            class="full-width"
+                          >
+                            <mat-label>Select Appointment Date</mat-label>
+                            <input
+                              matInput
+                              [matDatepicker]="picker"
+                              formControlName="appointment_date"
+                              [min]="today"
+                              [matDatepickerFilter]="isDateAvailable"
+                              readonly
+                            />
+                            <mat-datepicker-toggle
+                              matIconSuffix
+                              [for]="picker"
+                            ></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                            <mat-hint>
+                              Available dates include weekly schedule and
+                              specific appointment dates
+                              <span *ngIf="upcomingSpecificDates.length > 0">
+                                • Next specific dates:
+                                <span
+                                  *ngFor="
+                                    let date of upcomingSpecificDates.slice(
+                                      0,
+                                      2
+                                    );
+                                    let last = last
+                                  "
+                                >
+                                  {{ formatSpecificDate(date.specific_date!)
+                                  }}<span *ngIf="!last">, </span>
+                                </span>
+                                <span *ngIf="upcomingSpecificDates.length > 2"
+                                  >...</span
+                                >
+                              </span>
+                            </mat-hint>
+                            <mat-error
+                              *ngIf="
+                                appointmentForm
+                                  .get('appointment_date')
+                                  ?.hasError('required')
+                              "
+                            >
+                              Please select an appointment date
+                            </mat-error>
+                          </mat-form-field>
+
+                          <!-- Show selected schedule info -->
+                          <div
+                            *ngIf="
+                              appointmentForm.get('appointment_date')?.value
+                            "
+                            class="selected-schedule-info"
+                          >
+                            <mat-icon>info</mat-icon>
+                            <span>
+                              Appointment will be scheduled during:
+                              <strong
+                                >{{
+                                  getScheduleForDate(
+                                    appointmentForm.get("appointment_date")
+                                      ?.value
+                                  )?.start_time
+                                }}
+                                -
+                                {{
+                                  getScheduleForDate(
+                                    appointmentForm.get("appointment_date")
+                                      ?.value
+                                  )?.end_time
+                                }}</strong
+                              >
+                            </span>
+                          </div>
+
+                          <!-- Reason for Visit -->
+                          <mat-form-field
+                            appearance="outline"
+                            class="full-width"
+                          >
+                            <mat-label>Reason for Visit</mat-label>
+                            <textarea
+                              matInput
+                              formControlName="reason"
+                              rows="4"
+                              placeholder="Please describe the reason for your visit (minimum 10 characters)..."
+                            ></textarea>
+                            <mat-error
+                              *ngIf="
+                                appointmentForm
+                                  .get('reason')
+                                  ?.hasError('required')
+                              "
+                            >
+                              Please provide a reason for your visit
+                            </mat-error>
+                            <mat-error
+                              *ngIf="
+                                appointmentForm
+                                  .get('reason')
+                                  ?.hasError('minlength')
+                              "
+                            >
+                              Reason must be at least 10 characters long
+                            </mat-error>
+                          </mat-form-field>
+
+                          <!-- Submit Button -->
+                          <div class="form-actions">
+                            <button
+                              mat-raised-button
+                              color="primary"
+                              type="submit"
+                              [disabled]="
+                                appointmentForm.invalid || bookingLoading
+                              "
+                              class="book-btn"
+                            >
+                              <mat-icon *ngIf="bookingLoading"
+                                >hourglass_empty</mat-icon
+                              >
+                              <mat-icon *ngIf="!bookingLoading"
+                                >event_available</mat-icon
+                              >
+                              {{
+                                bookingLoading
+                                  ? "Booking..."
+                                  : "Book Appointment"
+                              }}
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+
+                      <!-- No Available Schedules -->
+                      <div
+                        *ngIf="
+                          !schedulesLoading && recurringSchedules.length === 0
+                        "
+                        class="no-schedules"
+                      >
+                        <mat-icon>schedule</mat-icon>
+                        <h4>No Available Time Slots</h4>
+                        <p>
+                          This doctor currently has no recurring weekly
+                          schedules available for appointments.
+                        </p>
+                      </div>
+
+                      <!-- Loading Schedules -->
+                      <div *ngIf="schedulesLoading" class="loading-schedules">
+                        <mat-spinner diameter="30"></mat-spinner>
+                        <p>Loading available time slots...</p>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  </div>
+</div>

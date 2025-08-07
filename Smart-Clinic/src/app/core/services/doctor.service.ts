@@ -126,6 +126,29 @@ export class DoctorService {
     });
   }
 
+  updateSchedule(scheduleId: string | number, schedule: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    return this.http.put(
+      `${this.apiUrl}/doctors/schedule/${scheduleId}/`,
+      schedule,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  deleteSchedule(scheduleId: string | number): Observable<any> {
+    const token = localStorage.getItem('token');
+    return this.http.delete(`${this.apiUrl}/doctors/schedule/${scheduleId}/delete/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
   getSchedules(doctorId: string | number): Observable<any> {
     const url = `${this.apiUrl}/doctors/${doctorId}/schedules/`;
     return this.http.get<any>(url);

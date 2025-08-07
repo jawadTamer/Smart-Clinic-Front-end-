@@ -149,7 +149,7 @@ export class HeaderComponent implements OnInit {
   getProfilePictureUrl(): string | null {
     if (!this.currentUser) return null;
 
-    // Check multiple possible field names for profile picture
+    
     const possibleFields = [
       'profile_picture',
       'profile_image',

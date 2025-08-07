@@ -28,7 +28,7 @@
           *ngIf="getProfilePictureUrl() && !imageLoadError"
           [src]="getProfilePictureUrl()"
           [alt]="currentUser?.first_name"
-          class="profile-pic"
+          class="profile-image"
           (error)="onImageError($event)"
           (load)="onImageLoad($event)"
           />

@@ -49,4 +49,8 @@ export class ClinicService {
   createClinic(clinicData: NewClinic): Observable<Clinic> {
     return this.http.post<Clinic>(`${this.apiUrl}/clinics/create/`, clinicData);
   }
+
+  getClinicDetails(clinicId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/clinics/${clinicId}/`);
+  }
 }

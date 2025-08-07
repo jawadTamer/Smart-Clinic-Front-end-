@@ -81,4 +81,58 @@ export class PatientService {
       }
     );
   }
+
+  createAppointment(appointmentData: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    return this.http.post(
+      `${this.apiUrl}/appointments/create/`,
+      appointmentData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  getAppointments(): Observable<any> {
+    const token = localStorage.getItem('token');
+    return this.http.get<any>(`${this.apiUrl}/appointments/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  updateAppointmentStatus(
+    appointmentId: string,
+    status: string
+  ): Observable<any> {
+    const token = localStorage.getItem('token');
+    return this.http.patch(
+      `${this.apiUrl}/appointments/${appointmentId}/`,
+      { status },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  cancelAppointment(appointmentId: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    return this.http.put(
+      `${this.apiUrl}/appointments/${appointmentId}/`,
+      { status: 'cancelled' },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
 }
