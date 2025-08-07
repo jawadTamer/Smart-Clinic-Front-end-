@@ -120,21 +120,29 @@ export class DoctorService {
   }
 
   getAllDoctorsComplete(): Observable<Doctor[]> {
+    console.log('getAllDoctorsComplete() called');
     return this.fetchAllDoctorsPages();
   }
 
   private fetchAllDoctorsPages(
     url: string = `${this.apiUrl}/doctors/`
   ): Observable<Doctor[]> {
+    console.log('fetchAllDoctorsPages called with URL:', url);
     return this.http.get<DoctorsApiResponse>(url).pipe(
       expand((response: DoctorsApiResponse) => {
+        console.log('Expand called with response:', response);
+        console.log('Next URL:', response.next);
         // If there's a next page, continue fetching, otherwise return EMPTY
         return response.next
           ? this.http.get<DoctorsApiResponse>(response.next)
           : EMPTY;
       }),
-      map((response: DoctorsApiResponse) => response.results),
+      map((response: DoctorsApiResponse) => {
+        console.log('Map called, doctors in this page:', response.results.length);
+        return response.results;
+      }),
       reduce((allDoctors: Doctor[], doctors: Doctor[]) => {
+        console.log(`Reduce called: ${allDoctors.length} + ${doctors.length} = ${allDoctors.length + doctors.length}`);
         return [...allDoctors, ...doctors];
       }, [])
     );
