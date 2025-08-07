@@ -107,24 +107,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   loadDoctors() {
     this.isLoadingDoctors = true;
-    console.log('Starting to load doctors...');
 
     // First, try to get a simple count to see what's available
     this.doctorService.getAllDoctors().subscribe({
       next: (response: DoctorsApiResponse) => {
-        console.log('Simple API response:', response);
-        console.log(`Total doctors available: ${response.count}`);
-        console.log(`Doctors in this response: ${response.results.length}`);
-
         if (response.count && response.results.length < response.count) {
-          console.log(
-            'Need to fetch more pages, using getAllDoctorsComplete()'
-          );
+          // Need to fetch all pages
           this.doctorService.getAllDoctorsComplete().subscribe({
             next: (doctors: Doctor[]) => {
-              console.log(
-                `Loaded ${doctors.length} doctors using getAllDoctorsComplete()`
-              );
               this.doctors = doctors;
               this.filteredDoctors = [...this.doctors];
               this.extractSpecializations();
@@ -133,7 +123,6 @@ export class HomeComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
               console.error('Error with getAllDoctorsComplete:', error);
-              console.log('Falling back to simple results');
               // Fallback to the simple response we already have
               this.doctors = response.results;
               this.filteredDoctors = [...this.doctors];
@@ -143,7 +132,6 @@ export class HomeComponent implements OnInit, OnDestroy {
             },
           });
         } else {
-          console.log('All doctors loaded in single response');
           // All doctors are in this single response
           this.doctors = response.results;
           this.filteredDoctors = [...this.doctors];

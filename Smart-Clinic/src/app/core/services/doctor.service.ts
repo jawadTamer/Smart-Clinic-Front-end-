@@ -120,37 +120,25 @@ export class DoctorService {
   }
 
   getAllDoctorsComplete(): Observable<Doctor[]> {
-    console.log('getAllDoctorsComplete() called');
     return this.fetchAllDoctorsPages();
   }
 
   private fetchAllDoctorsPages(
     url: string = `${this.apiUrl}/doctors/`
   ): Observable<Doctor[]> {
-    console.log('fetchAllDoctorsPages called with URL:', url);
     return this.http.get<DoctorsApiResponse>(url).pipe(
       expand((response: DoctorsApiResponse) => {
-        console.log('Expand called with response:', response);
-        console.log('Next URL:', response.next);
-        
         // Fix HTTP to HTTPS for next URL if needed
         let nextUrl = response.next;
         if (nextUrl && nextUrl.startsWith('http://')) {
           nextUrl = nextUrl.replace('http://', 'https://');
-          console.log('Fixed next URL to HTTPS:', nextUrl);
         }
-        
+
         // If there's a next page, continue fetching, otherwise return EMPTY
-        return nextUrl
-          ? this.http.get<DoctorsApiResponse>(nextUrl)
-          : EMPTY;
+        return nextUrl ? this.http.get<DoctorsApiResponse>(nextUrl) : EMPTY;
       }),
-      map((response: DoctorsApiResponse) => {
-        console.log('Map called, doctors in this page:', response.results.length);
-        return response.results;
-      }),
+      map((response: DoctorsApiResponse) => response.results),
       reduce((allDoctors: Doctor[], doctors: Doctor[]) => {
-        console.log(`Reduce called: ${allDoctors.length} + ${doctors.length} = ${allDoctors.length + doctors.length}`);
         return [...allDoctors, ...doctors];
       }, [])
     );
