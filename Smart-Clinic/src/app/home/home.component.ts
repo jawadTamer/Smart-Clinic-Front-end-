@@ -108,28 +108,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   loadDoctors() {
     this.isLoadingDoctors = true;
 
-    this.doctorService.getAllDoctors().subscribe({
-      next: (response: DoctorsApiResponse) => {
-        this.doctors = response.results;
-        this.filteredDoctors = [...this.doctors];
-        this.extractSpecializations();
-        this.updateDoctorsPagination();
-        this.isLoadingDoctors = false;
-
-        if (response.count && response.results.length < response.count) {
-          this.loadAllDoctorsAlternative();
-        }
-      },
-      error: (error) => {
-        console.error('Error loading doctors:', error);
-        this.isLoadingDoctors = false;
-        this.loadAllDoctorsAlternative();
-      },
-    });
-  }
-
-  private loadAllDoctorsAlternative() {
-    this.isLoadingDoctors = true;
     this.doctorService.getAllDoctorsComplete().subscribe({
       next: (doctors: Doctor[]) => {
         this.doctors = doctors;
@@ -139,7 +117,24 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.isLoadingDoctors = false;
       },
       error: (error) => {
-        console.error('Error loading doctors with alternative method:', error);
+        console.error('Error loading doctors:', error);
+        this.isLoadingDoctors = false;
+        this.loadDoctorsSimple();
+      },
+    });
+  }
+
+  private loadDoctorsSimple() {
+    this.doctorService.getAllDoctors().subscribe({
+      next: (response: DoctorsApiResponse) => {
+        this.doctors = response.results;
+        this.filteredDoctors = [...this.doctors];
+        this.extractSpecializations();
+        this.updateDoctorsPagination();
+        this.isLoadingDoctors = false;
+      },
+      error: (error) => {
+        console.error('Error loading doctors with simple method:', error);
         this.isLoadingDoctors = false;
       },
     });
