@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { trigger, transition, style, animate } from '@angular/animations';
 import {
   DoctorService,
@@ -32,6 +33,7 @@ import { User } from '../core/services/auth.service';
     MatChipsModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatPaginatorModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
@@ -60,9 +62,19 @@ export class HomeComponent implements OnInit, OnDestroy {
   specializations: string[] = ['All'];
   isLoadingDoctors = false;
 
+  // Doctors pagination
+  doctorsPageSize = 6;
+  doctorsCurrentPage = 0;
+  paginatedDoctors: Doctor[] = [];
+
   // Clinics data
   clinics: Clinic[] = [];
   isLoadingClinics = false;
+
+  // Clinics pagination
+  clinicsPageSize = 6;
+  clinicsCurrentPage = 0;
+  paginatedClinics: Clinic[] = [];
 
   // Background images array - you can add more images to the assets/images folder
   backgroundImages = [
@@ -95,14 +107,39 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   loadDoctors() {
     this.isLoadingDoctors = true;
+
     this.doctorService.getAllDoctors().subscribe({
       next: (response: DoctorsApiResponse) => {
         this.doctors = response.results;
         this.filteredDoctors = [...this.doctors];
         this.extractSpecializations();
+        this.updateDoctorsPagination();
+        this.isLoadingDoctors = false;
+
+        if (response.count && response.results.length < response.count) {
+          this.loadAllDoctorsAlternative();
+        }
+      },
+      error: (error) => {
+        console.error('Error loading doctors:', error);
+        this.isLoadingDoctors = false;
+        this.loadAllDoctorsAlternative();
+      },
+    });
+  }
+
+  private loadAllDoctorsAlternative() {
+    this.isLoadingDoctors = true;
+    this.doctorService.getAllDoctorsComplete().subscribe({
+      next: (doctors: Doctor[]) => {
+        this.doctors = doctors;
+        this.filteredDoctors = [...this.doctors];
+        this.extractSpecializations();
+        this.updateDoctorsPagination();
         this.isLoadingDoctors = false;
       },
       error: (error) => {
+        console.error('Error loading doctors with alternative method:', error);
         this.isLoadingDoctors = false;
       },
     });
@@ -111,17 +148,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   loadClinics() {
     this.isLoadingClinics = true;
 
-    // Try the simple method first (direct array response)
     this.clinicService.getClinics().subscribe({
       next: (clinics: Clinic[]) => {
         this.clinics = clinics;
+        this.updateClinicsPagination();
         this.isLoadingClinics = false;
       },
       error: (error) => {
-        // If that fails, try the paginated response
         this.clinicService.getAllClinics().subscribe({
           next: (response: ClinicsApiResponse) => {
             this.clinics = response.results;
+            this.updateClinicsPagination();
             this.isLoadingClinics = false;
           },
           error: (err) => {
@@ -147,6 +184,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         (doctor) => doctor.specialization === specialization
       );
     }
+    this.doctorsCurrentPage = 0;
+    this.updateDoctorsPagination();
   }
 
   getDoctorFullName(doctor: Doctor): string {
@@ -154,25 +193,19 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   getDoctorImage(doctor: Doctor): string {
-    // Log for debugging
-
     const profilePicture = doctor.user.profile_picture;
 
-    // If profilePicture is null or undefined, return a default image
     if (!profilePicture) {
       return 'assets/images/default-doctor.jpg';
     }
 
-    // If it's already a complete URL (starts with http)
     if (
       profilePicture.startsWith('http://') ||
       profilePicture.startsWith('https://')
     ) {
-      // Check if the URL already has /api in it
       if (profilePicture.includes('/api/')) {
         return profilePicture;
       } else {
-        // Insert /api into the URL after the domain
         const correctedUrl = profilePicture.replace(
           'smart-clinic-api.fly.dev/',
           'smart-clinic-api.fly.dev/api/'
@@ -181,24 +214,20 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     }
 
-    // If it starts with a slash, it's a relative path from the API
     if (profilePicture.startsWith('/')) {
       const fullUrl = `${environment.apiUrl}${profilePicture}`;
       return fullUrl;
     }
 
-    // For any other case, prepend the API URL with a slash
     const fullUrl = `${environment.apiUrl}/${profilePicture}`;
     return fullUrl;
   }
 
   bookAppointment(doctor: Doctor) {
-    // Navigate to doctor details page for appointment booking
     this.router.navigate(['/doctor', doctor.id]);
   }
 
   openDoctorDetailsDialog(doctor: Doctor) {
-    // Navigate to doctor details page instead of opening dialog
     this.router.navigate(['/doctor', doctor.id]);
   }
 
@@ -240,5 +269,27 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   getCurrentBackgroundImage() {
     return this.backgroundImages[this.currentImageIndex];
+  }
+
+  updateDoctorsPagination() {
+    const startIndex = this.doctorsCurrentPage * this.doctorsPageSize;
+    const endIndex = startIndex + this.doctorsPageSize;
+    this.paginatedDoctors = this.filteredDoctors.slice(startIndex, endIndex);
+  }
+
+  onDoctorsPageChange(event: any) {
+    this.doctorsCurrentPage = event.pageIndex;
+    this.updateDoctorsPagination();
+  }
+
+  updateClinicsPagination() {
+    const startIndex = this.clinicsCurrentPage * this.clinicsPageSize;
+    const endIndex = startIndex + this.clinicsPageSize;
+    this.paginatedClinics = this.clinics.slice(startIndex, endIndex);
+  }
+
+  onClinicsPageChange(event: any) {
+    this.clinicsCurrentPage = event.pageIndex;
+    this.updateClinicsPagination();
   }
 }

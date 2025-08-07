@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, of, EMPTY } from 'rxjs';
+import { map, expand, reduce, takeWhile } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface User {
@@ -113,7 +114,30 @@ export class DoctorService {
   constructor(private http: HttpClient) {}
 
   getAllDoctors(): Observable<DoctorsApiResponse> {
-    return this.http.get<DoctorsApiResponse>(`${this.apiUrl}/doctors/`);
+    return this.http.get<DoctorsApiResponse>(
+      `${this.apiUrl}/doctors/?page_size=1000`
+    );
+  }
+
+  getAllDoctorsComplete(): Observable<Doctor[]> {
+    return this.fetchAllDoctorsPages();
+  }
+
+  private fetchAllDoctorsPages(
+    url: string = `${this.apiUrl}/doctors/`
+  ): Observable<Doctor[]> {
+    return this.http.get<DoctorsApiResponse>(url).pipe(
+      expand((response: DoctorsApiResponse) => {
+        // If there's a next page, continue fetching, otherwise return EMPTY
+        return response.next
+          ? this.http.get<DoctorsApiResponse>(response.next)
+          : EMPTY;
+      }),
+      map((response: DoctorsApiResponse) => response.results),
+      reduce((allDoctors: Doctor[], doctors: Doctor[]) => {
+        return [...allDoctors, ...doctors];
+      }, [])
+    );
   }
 
   createSchedule(schedule: any): Observable<any> {
@@ -142,11 +166,14 @@ export class DoctorService {
 
   deleteSchedule(scheduleId: string | number): Observable<any> {
     const token = localStorage.getItem('token');
-    return this.http.delete(`${this.apiUrl}/doctors/schedule/${scheduleId}/delete/`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    return this.http.delete(
+      `${this.apiUrl}/doctors/schedule/${scheduleId}/delete/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   }
 
   getSchedules(doctorId: string | number): Observable<any> {

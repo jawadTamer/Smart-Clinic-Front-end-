@@ -43,7 +43,7 @@ export class ClinicService {
   }
 
   getAllClinics(): Observable<ClinicsApiResponse> {
-    return this.http.get<ClinicsApiResponse>(`${this.apiUrl}/clinics/`);
+    return this.http.get<ClinicsApiResponse>(`${this.apiUrl}/clinics/?page_size=100`);
   }
 
   createClinic(clinicData: NewClinic): Observable<Clinic> {

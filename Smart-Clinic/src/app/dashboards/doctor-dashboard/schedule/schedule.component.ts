@@ -202,6 +202,19 @@ export class ScheduleComponent implements OnInit {
             this.resetForm();
             this.cancelEdit();
             this.loading = false;
+
+            // Success alert for schedule update
+            Swal.fire({
+              icon: 'success',
+              title: 'Schedule Updated!',
+              text: 'Your schedule has been updated successfully.',
+              timer: 2000,
+              showConfirmButton: false,
+              customClass: {
+                popup: 'clinic-swal-popup',
+                title: 'clinic-swal-title',
+              },
+            });
           },
           error: (err) => {
             this.handleError(err);
@@ -214,6 +227,19 @@ export class ScheduleComponent implements OnInit {
           this.fetchSchedules();
           this.resetForm();
           this.loading = false;
+
+          // Success alert for schedule creation
+          Swal.fire({
+            icon: 'success',
+            title: 'Schedule Created!',
+            text: 'Your new schedule has been created successfully.',
+            timer: 2000,
+            showConfirmButton: false,
+            customClass: {
+              popup: 'clinic-swal-popup',
+              title: 'clinic-swal-title',
+            },
+          });
         },
         error: (err) => {
           this.handleError(err);
