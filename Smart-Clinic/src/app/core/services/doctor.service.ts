@@ -132,9 +132,17 @@ export class DoctorService {
       expand((response: DoctorsApiResponse) => {
         console.log('Expand called with response:', response);
         console.log('Next URL:', response.next);
+        
+        // Fix HTTP to HTTPS for next URL if needed
+        let nextUrl = response.next;
+        if (nextUrl && nextUrl.startsWith('http://')) {
+          nextUrl = nextUrl.replace('http://', 'https://');
+          console.log('Fixed next URL to HTTPS:', nextUrl);
+        }
+        
         // If there's a next page, continue fetching, otherwise return EMPTY
-        return response.next
-          ? this.http.get<DoctorsApiResponse>(response.next)
+        return nextUrl
+          ? this.http.get<DoctorsApiResponse>(nextUrl)
           : EMPTY;
       }),
       map((response: DoctorsApiResponse) => {
